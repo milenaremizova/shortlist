@@ -20,3 +20,8 @@ export interface Ranking {
     places: Movie[];
     isFinal: boolean;
 }
+
+export interface SessionProgress {
+    done: number;
+    estimated: number;
+}

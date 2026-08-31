@@ -1,21 +1,27 @@
 import type { RankingStrategy } from "./RankingStrategy";
-import type { Comparison, Movie } from "./types";
+import type { Comparison, Movie, Pair, SessionProgress } from "./types";
 
 export class RankingSession {
   private pool: Movie[];
   private log: Comparison[];
   private strategy: RankingStrategy;
   private readonly factory: () => RankingStrategy;
+  private currentPairCache: Pair | null;
 
   constructor(pool: Movie[], factory: () => RankingStrategy) {
     this.pool = pool;
     this.log = [];
     this.strategy = factory();
     this.factory = factory;
+    this.currentPairCache = this.strategy.nextPair();
+  }
+
+  currentPair(): Pair | null {
+    return this.currentPairCache;
   }
 
   choose(winnerId: string): void {
-    const pair = this.strategy.nextPair();
+    const pair = this.currentPairCache;
     if (!pair) {
       return;
     }
@@ -30,6 +36,7 @@ export class RankingSession {
     };
     this.log.push(comparison);
     this.strategy.submit(comparison);
+    this.currentPairCache = this.strategy.nextPair();
   }
 
   undo(): void {
@@ -38,5 +45,13 @@ export class RankingSession {
     for (const comparison of this.log) {
       this.strategy.submit(comparison);
     }
+    this.currentPairCache = this.strategy.nextPair();
+  }
+
+  progress(): SessionProgress {
+    return {
+      done: this.log.length,
+      estimated: this.strategy.estimateTotal(),
+    };
   }
 }
