@@ -73,3 +73,40 @@ describe("Ranking session", () => {
     expect(current).toEqual(pairB);
   });
 });
+
+describe("Ranking session", () => {
+  it("тест на невалидный winnerId", () => {
+    const a = makeMovie("a");
+    const b = makeMovie("b");
+    const pair: Pair = { left: a, right: b };
+    const session = new RankingSession([a, b], () => new FakeStrategy([pair]));
+
+    expect(() => session.choose("c")).toThrow();
+  });
+});
+
+describe("Ranking session", () => {
+  it("тест на undo", () => {
+    const a = makeMovie("a");
+    const b = makeMovie("b");
+    const c = makeMovie("c");
+    const d = makeMovie("d");
+    const pairAB = { left: a, right: b };
+    const pairBC = { left: b, right: c };
+    const pairCD = { left: c, right: d };
+    const session = new RankingSession(
+      [a, b],
+      () => new FakeStrategy([pairAB, pairBC, pairCD]),
+    );
+
+    session.choose(pairAB.right.id);
+
+    expect(session.currentPair()).toEqual(pairBC);
+    expect(session.progress().done).toBe(1);
+
+    session.undo();
+
+    expect(session.currentPair()).toEqual(pairAB);
+    expect(session.progress().done).toBe(0);
+  });
+});
