@@ -93,4 +93,16 @@ describe("MergeqSortStrategy", () => {
     });
     expect(strategy.isComplete()).toBe(true);
   });
+  it("estimateTotal возвращает разумную положительную оценку", () => {
+    // Arrange
+    const movies = ["a", "b", "c", "d"].map(makeMovie);
+    const strategy = new MergeSortStrategy(movies, identity);
+
+    // Act
+    const estimate = strategy.estimateTotal();
+
+    // Assert
+    expect(estimate).toBeGreaterThan(0);
+    expect(Number.isFinite(estimate)).toBe(true);
+  });
 });
