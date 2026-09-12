@@ -1,0 +1,42 @@
+import { describe, it, expect } from "vitest";
+import { MergeSortStrategy } from "./MergeSortStrategy";
+import type { Movie } from "../types";
+
+const identity = (movies: Movie[]): Movie[] => movies;
+
+function makeMovie(id: string): Movie {
+  return { id, title: id, year: 2020, posterUrl: null };
+}
+
+describe("MergeqSortStrategy", () => {
+  it("на старте отдаёт пару из первых двух фильмов пула", () => {
+    // Arrange
+    const a = makeMovie("a");
+    const b = makeMovie("b");
+    const c = makeMovie("c");
+    const strategy = new MergeSortStrategy([a, b, c], identity);
+
+    // Act
+    const pair = strategy.nextPair();
+
+    // Assert
+    expect(pair).toEqual({ left: a, right: b });
+  });
+
+  it("следующая пара после первого раунда", () => {
+    const a = makeMovie("a");
+    const b = makeMovie("b");
+    const c = makeMovie("c");
+    const strategy = new MergeSortStrategy([a, b, c], identity);
+
+    const pairAB = strategy.nextPair();
+    const submit = strategy.submit({
+      leftId: a.id,
+      rightId: b.id,
+      winnerId: a.id,
+    });
+    const pairAC = strategy.nextPair();
+
+    expect(pairAC).toEqual({ left: a, right: c });
+  });
+});

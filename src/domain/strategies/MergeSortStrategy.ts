@@ -7,22 +7,25 @@ interface MergeState {
   merged: Movie[];
 }
 
+function shuffle(movies: Movie[]): Movie[] {
+  const result = [...movies];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
 export class MergeSortStrategy implements RankingStrategy {
   private runs: Movie[][];
   private mergeState: MergeState | null; // null - слияние не начато
 
-  constructor(pool: Movie[]) {
-    this.runs = this.shuffle(pool).map((movie) => [movie]);
+  constructor(
+    pool: Movie[],
+    shuffleFn: (movies: Movie[]) => Movie[] = shuffle,
+  ) {
+    this.runs = shuffleFn(pool).map((movie) => [movie]);
     this.mergeState = null;
-  }
-
-  private shuffle(movies: Movie[]): Movie[] {
-    const result = [...movies];
-    for (let i = result.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [result[i], result[j]] = [result[j], result[i]];
-    }
-    return result;
   }
 
   nextPair(): Pair | null {
