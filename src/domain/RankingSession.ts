@@ -1,4 +1,4 @@
-import type { RankingStrategy } from "./RankingStrategy";
+import type { RankingStrategy } from "./strategies/RankingStrategy";
 import type { Comparison, Movie, Pair, SessionProgress } from "./types";
 
 export class RankingSession {
