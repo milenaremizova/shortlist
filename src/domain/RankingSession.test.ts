@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { RankingSession } from "./RankingSession";
-import type { RankingStrategy } from "./strategies/RankingStrategy";
+import type { RankingStrategy } from "./RankingStrategy";
 import type { Pair, Comparison, Ranking, Movie } from "./types";
 
 class FakeStrategy implements RankingStrategy {

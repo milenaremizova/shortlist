@@ -1,4 +1,4 @@
-import type { RankingStrategy } from "./strategies/RankingStrategy";
+import type { RankingStrategy } from "./RankingStrategy";
 import type { Comparison, Movie, Pair, SessionProgress } from "./types";
 
 export class RankingSession {
@@ -43,6 +43,7 @@ export class RankingSession {
     this.log.pop();
     this.strategy = this.factory();
     for (const comparison of this.log) {
+      this.strategy.nextPair();
       this.strategy.submit(comparison);
     }
     this.currentPairCache = this.strategy.nextPair();

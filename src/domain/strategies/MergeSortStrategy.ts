@@ -1,5 +1,6 @@
-import type { RankingStrategy } from "./RankingStrategy";
+import type { RankingStrategy } from "../RankingStrategy";
 import type { Comparison, Movie, Pair, Ranking } from "../types";
+import { shuffle } from "../shuffle";
 
 interface MergeState {
   left: Movie[];
@@ -7,18 +8,9 @@ interface MergeState {
   merged: Movie[];
 }
 
-function shuffle(movies: Movie[]): Movie[] {
-  const result = [...movies];
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
-  }
-  return result;
-}
-
 export class MergeSortStrategy implements RankingStrategy {
   private runs: Movie[][];
-  private mergeState: MergeState | null; // null - слияние не начато
+  private mergeState: MergeState | null;
 
   constructor(
     pool: Movie[],
