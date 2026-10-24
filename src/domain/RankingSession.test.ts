@@ -1,10 +1,13 @@
-import { describe, it, expect } from "vitest";
-import { RankingSession } from "./RankingSession";
-import type { RankingStrategy } from "./strategies/RankingStrategy";
-import type { Pair, Comparison, Ranking, Movie } from "./types";
+import { describe, it, expect } from 'vitest';
+import { RankingSession } from './RankingSession';
+import type { RankingStrategy } from './RankingStrategy';
+import { MergeSortStrategy } from './strategies/MergeSortStrategy';
+import { makeItem } from './testing';
+import type { Pair, Ranking } from './types';
 
+/** Фейковая стратегия: просто отдаёт пары по списку. Проверяем сессию, а не алгоритм. */
 class FakeStrategy implements RankingStrategy {
-  private pairs: Pair[];
+  private readonly pairs: Pair[];
   private index = 0;
 
   constructor(pairs: Pair[]) {
@@ -15,7 +18,7 @@ class FakeStrategy implements RankingStrategy {
     return this.pairs[this.index] ?? null;
   }
 
-  submit(comparison: Comparison): void {
+  submit(): void {
     this.index++;
   }
 
@@ -32,75 +35,44 @@ class FakeStrategy implements RankingStrategy {
   }
 }
 
-function makeMovie(id: string): Movie {
-  return { id, title: id, year: 2020, posterUrl: null };
-}
+describe('RankingSession', () => {
+  const a = makeItem('a');
+  const b = makeItem('b');
+  const c = makeItem('c');
+  const d = makeItem('d');
+  const pairAB: Pair = { left: a, right: b };
+  const pairBC: Pair = { left: b, right: c };
+  const pairCD: Pair = { left: c, right: d };
 
-describe("RankingSession", () => {
-  it("отдаёт первую пару из стратегии сразу после создания", () => {
+  it('отдаёт первую пару из стратегии сразу после создания', () => {
     // Arrange
-    const a = makeMovie("a");
-    const b = makeMovie("b");
-    const pair: Pair = { left: a, right: b };
-    const session = new RankingSession([a, b], () => new FakeStrategy([pair]));
+    const session = new RankingSession(() => new FakeStrategy([pairAB]));
 
     // Act
     const current = session.currentPair();
 
     // Assert
-    expect(current).toEqual(pair);
+    expect(current).toEqual(pairAB);
   });
-});
 
-describe("Ranking session", () => {
-  it("после choose с валидным winnerId текущая пара должна смениться на следующую из списка", () => {
-    // Arrange
-    const a = makeMovie("a");
-    const b = makeMovie("b");
-    const c = makeMovie("c");
-    const pairA: Pair = { left: a, right: b };
-    const pairB: Pair = { left: b, right: c };
-    const session = new RankingSession(
-      [a, b],
-      () => new FakeStrategy([pairA, pairB]),
-    );
+  it('после choose с валидным winnerId переходит к следующей паре', () => {
+    const session = new RankingSession(() => new FakeStrategy([pairAB, pairBC]));
 
-    // act
-    session.choose(pairA.left.id);
-    const current = session.currentPair();
+    session.choose(a.id);
 
-    // assert
-    expect(current).toEqual(pairB);
+    expect(session.currentPair()).toEqual(pairBC);
   });
-});
 
-describe("Ranking session", () => {
-  it("тест на невалидный winnerId", () => {
-    const a = makeMovie("a");
-    const b = makeMovie("b");
-    const pair: Pair = { left: a, right: b };
-    const session = new RankingSession([a, b], () => new FakeStrategy([pair]));
+  it('бросает ошибку, если winnerId не из текущей пары', () => {
+    const session = new RankingSession(() => new FakeStrategy([pairAB]));
 
-    expect(() => session.choose("c")).toThrow();
+    expect(() => session.choose('c')).toThrow();
   });
-});
 
-describe("Ranking session", () => {
-  it("тест на undo", () => {
-    const a = makeMovie("a");
-    const b = makeMovie("b");
-    const c = makeMovie("c");
-    const d = makeMovie("d");
-    const pairAB = { left: a, right: b };
-    const pairBC = { left: b, right: c };
-    const pairCD = { left: c, right: d };
-    const session = new RankingSession(
-      [a, b],
-      () => new FakeStrategy([pairAB, pairBC, pairCD]),
-    );
+  it('undo возвращает предыдущую пару и прогресс', () => {
+    const session = new RankingSession(() => new FakeStrategy([pairAB, pairBC, pairCD]));
 
-    session.choose(pairAB.right.id);
-
+    session.choose(b.id);
     expect(session.currentPair()).toEqual(pairBC);
     expect(session.progress().done).toBe(1);
 
@@ -108,5 +80,33 @@ describe("Ranking session", () => {
 
     expect(session.currentPair()).toEqual(pairAB);
     expect(session.progress().done).toBe(0);
+  });
+
+  it('undo без ходов ничего не ломает, canUndo показывает, можно ли отменить', () => {
+    const session = new RankingSession(() => new FakeStrategy([pairAB]));
+
+    expect(session.canUndo()).toBe(false);
+    session.undo();
+    expect(session.currentPair()).toEqual(pairAB);
+
+    session.choose(a.id);
+    expect(session.canUndo()).toBe(true);
+  });
+
+  it('вместе с MergeSortStrategy: undo посреди слияния возвращает ту же пару, а не первую', () => {
+    // Arrange: на этом сценарии ломался старый undo — повтор журнала без nextPair()
+    const pool = ['a', 'b', 'c', 'd'].map((id) => makeItem(id));
+    const session = new RankingSession(() => new MergeSortStrategy(pool));
+    session.choose('a'); // a > b
+    session.choose('c'); // c > d → идёт слияние [a, b] и [c, d]
+    const beforeChoice = session.currentPair();
+
+    // Act
+    session.choose(beforeChoice!.left.id);
+    session.undo();
+
+    // Assert
+    expect(session.currentPair()).toEqual(beforeChoice);
+    expect(session.progress().done).toBe(2);
   });
 });

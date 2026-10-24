@@ -1,0 +1,68 @@
+// Токены из UI-кита в Фигме («Кобальт и масло», v3).
+// Палитра → семантика: в компонентах используем только семантические var(--color-…).
+
+:root {
+  // палитра
+  --cobalt-500: #3347ff;
+  --white: #ffffff;
+  --mist-100: #eef0fa;
+  --butter-200: #ffe9a8;
+  --butter-400: #ffd66b;
+  --butter-500: #f5c443;
+  --peach-200: #ffc6b0;
+  --peach-400: #ff9e7a;
+  --ink-900: #1e1a3a;
+  --ink-600: #57536f;
+  --ink-400: #8e8aa6;
+  --ink-200: #cfccdd;
+  --mint-100: #d4f5e6;
+  --mint-400: #3ddc97;
+  --coral-100: #ffe1d8;
+  --coral-500: #f2603f;
+
+  // семантика
+  --color-bg-screen: var(--cobalt-500);
+  --color-bg-surface: var(--white);
+  --color-bg-surface-muted: var(--mist-100);
+  --color-bg-accent: var(--butter-400);
+  --color-bg-accent-pressed: var(--butter-500);
+  --color-bg-accent-soft: var(--butter-200);
+  --color-bg-warm: var(--peach-400);
+  --color-bg-warm-soft: var(--peach-200);
+  --color-bg-inverse: var(--ink-900);
+  --color-bg-muted: var(--ink-200);
+  --color-bg-success: var(--mint-100);
+  --color-bg-error: var(--coral-100);
+  --color-text-primary: var(--ink-900);
+  --color-text-secondary: var(--ink-600);
+  --color-text-placeholder: var(--ink-400);
+  --color-text-on-screen: var(--white);
+  --color-border-error: var(--coral-500);
+  --color-signal-success: var(--mint-400); // только «Совпали!», «Вечер собран!» и успех
+
+  // шрифты
+  --font-display: 'Dela Gothic One', system-ui, sans-serif;
+  --font-text: 'Onest', system-ui, sans-serif;
+
+  // сетка 4px
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-14: 56px;
+
+  // радиусы
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-full: 999px;
+
+  // жёсткие тени без размытия
+  --shadow-hard-l: 6px 6px 0 var(--ink-900);
+  --shadow-hard-m: 4px 4px 0 var(--ink-900);
+  --shadow-hard-s: 3px 3px 0 var(--ink-900);
+}

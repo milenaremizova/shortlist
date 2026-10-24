@@ -1,97 +1,64 @@
-import type { RankingStrategy } from "./RankingStrategy";
-import type { Comparison, Movie, Pair, Ranking } from "../types";
+import type { RankingStrategy } from '../RankingStrategy';
+import type { Comparison, Item, Pair, Ranking } from '../types';
 
 interface MergeState {
-  left: Movie[];
-  right: Movie[];
-  merged: Movie[];
+  left: Item[];
+  right: Item[];
+  merged: Item[];
 }
 
-function shuffle(movies: Movie[]): Movie[] {
-  const result = [...movies];
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
-  }
-  return result;
-}
-
+/**
+ * Полный рейтинг для «Своего рейтинга»: восходящая сортировка слиянием.
+ * Каждая показанная пара — одно сравнение при слиянии двух соседних «кучек».
+ * Порядок пула задаёт вызывающий код: перемешивание — не забота стратегии.
+ */
 export class MergeSortStrategy implements RankingStrategy {
-  private runs: Movie[][];
-  private mergeState: MergeState | null; // null - слияние не начато
+  private readonly runs: Item[][];
+  private readonly total: number;
+  private mergeState: MergeState | null = null; // null — слияние пары кучек ещё не начато
 
-  constructor(
-    pool: Movie[],
-    shuffleFn: (movies: Movie[]) => Movie[] = shuffle,
-  ) {
-    this.runs = shuffleFn(pool).map((movie) => [movie]);
-    this.mergeState = null;
+  constructor(pool: readonly Item[]) {
+    this.runs = pool.map((item) => [item]);
+    this.total = pool.length;
   }
 
   nextPair(): Pair | null {
-    if (this.mergeState !== null) {
-      // деструктуризация
-      const { left, right } = this.mergeState;
-      return { left: left[0], right: right[0] };
+    if (this.mergeState === null) {
+      if (this.runs.length < 2) return null;
+      // копии, чтобы shift() не портил кучки в runs
+      this.mergeState = { left: [...this.runs[0]], right: [...this.runs[1]], merged: [] };
     }
-
-    if (this.runs.length >= 2) {
-      const left = this.runs[0];
-      const right = this.runs[1];
-      this.mergeState = {
-        left,
-        right,
-        merged: [],
-      };
-      return {
-        left: left[0],
-        right: right[0],
-      };
-    }
-    return null;
+    const { left, right } = this.mergeState;
+    return { left: left[0], right: right[0] };
   }
 
   submit(comparison: Comparison): void {
-    if (this.mergeState === null) return;
+    const state = this.mergeState;
+    if (state === null) return;
 
-    if (this.mergeState.left[0].id === comparison.winnerId) {
-      const winner = this.mergeState.left.shift();
-      this.mergeState.merged.push(winner);
-    } else if (this.mergeState.right[0].id === comparison.winnerId) {
-      const winner = this.mergeState.right.shift();
-      this.mergeState.merged.push(winner);
-    }
+    const from = state.left[0].id === comparison.winnerId ? state.left : state.right;
+    const winner = from.shift();
+    if (winner) state.merged.push(winner);
 
-    if (this.mergeState.left.length === 0) {
-      this.mergeState.merged.push(...this.mergeState.right);
-      this.runs.splice(0, 2, this.mergeState.merged);
-      this.mergeState = null;
-    } else if (this.mergeState.right.length === 0) {
-      this.mergeState.merged.push(...this.mergeState.left);
-      this.runs.splice(0, 2, this.mergeState.merged);
+    if (state.left.length === 0 || state.right.length === 0) {
+      state.merged.push(...state.left, ...state.right);
+      // слияние всегда идёт по двум первым кучкам: заменяем их одной
+      this.runs.splice(0, 2, state.merged);
       this.mergeState = null;
     }
   }
 
   getRanking(): Ranking {
-    if (this.runs.length === 1) {
-      return {
-        places: this.runs[0],
-        isFinal: true,
-      };
-    }
-    return {
-      places: this.runs.flat(),
-      isFinal: false,
-    };
+    return { places: this.runs.flat(), isFinal: this.isComplete() };
   }
 
   estimateTotal(): number {
-    const totalParts = this.runs.reduce((sum, run) => sum + run.length, 0);
-    return Math.ceil((totalParts * Math.log(totalParts)) / Math.log(2));
+    // верхняя оценка n·log2(n): реальных сравнений обычно меньше
+    if (this.total < 2) return 0;
+    return Math.ceil(this.total * Math.log2(this.total));
   }
 
   isComplete(): boolean {
-    return this.runs.length === 1;
+    return this.runs.length <= 1;
   }
 }

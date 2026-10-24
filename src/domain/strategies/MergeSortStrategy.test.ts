@@ -1,20 +1,21 @@
-import { describe, it, expect } from "vitest";
-import { MergeSortStrategy } from "./MergeSortStrategy";
-import type { Movie } from "../types";
+import { describe, it, expect } from 'vitest';
+import { MergeSortStrategy } from './MergeSortStrategy';
+import { makeItem } from '../testing';
 
-const identity = (movies: Movie[]): Movie[] => movies;
-
-function makeMovie(id: string): Movie {
-  return { id, title: id, year: 2020, posterUrl: null };
+/** Прогоняет стратегию до конца: всегда побеждает левый вариант пары. */
+function runLeftAlwaysWins(strategy: MergeSortStrategy): void {
+  let pair = strategy.nextPair();
+  while (pair !== null) {
+    strategy.submit({ leftId: pair.left.id, rightId: pair.right.id, winnerId: pair.left.id });
+    pair = strategy.nextPair();
+  }
 }
 
-describe("MergeqSortStrategy", () => {
-  it("на старте отдаёт пару из первых двух фильмов пула", () => {
+describe('MergeSortStrategy', () => {
+  it('на старте отдаёт пару из первых двух вариантов пула', () => {
     // Arrange
-    const a = makeMovie("a");
-    const b = makeMovie("b");
-    const c = makeMovie("c");
-    const strategy = new MergeSortStrategy([a, b, c], identity);
+    const [a, b, c] = ['a', 'b', 'c'].map((id) => makeItem(id));
+    const strategy = new MergeSortStrategy([a, b, c]);
 
     // Act
     const pair = strategy.nextPair();
@@ -23,85 +24,48 @@ describe("MergeqSortStrategy", () => {
     expect(pair).toEqual({ left: a, right: b });
   });
 
-  it("следующая пара после первого раунда", () => {
-    const a = makeMovie("a");
-    const b = makeMovie("b");
-    const c = makeMovie("c");
-    const strategy = new MergeSortStrategy([a, b, c], identity);
+  it('после первого сравнения сливает победителя со следующей кучкой', () => {
+    const [a, b, c] = ['a', 'b', 'c'].map((id) => makeItem(id));
+    const strategy = new MergeSortStrategy([a, b, c]);
 
-    const pairAB = strategy.nextPair();
-    const submit = strategy.submit({
-      leftId: a.id,
-      rightId: b.id,
-      winnerId: a.id,
-    });
-    const pairAC = strategy.nextPair();
+    strategy.nextPair();
+    strategy.submit({ leftId: a.id, rightId: b.id, winnerId: a.id });
 
-    expect(pairAC).toEqual({ left: a, right: c });
+    expect(strategy.nextPair()).toEqual({ left: a, right: c });
   });
 
-  it("сортировка 4ых фильмов до конца", () => {
-    // Arrange
-    const a = makeMovie("a");
-    const b = makeMovie("b");
-    const c = makeMovie("c");
-    const d = makeMovie("d");
-    const strategy = new MergeSortStrategy([a, b, c, d], identity);
+  it('сортирует 4 варианта до конца', () => {
+    const items = ['a', 'b', 'c', 'd'].map((id) => makeItem(id));
+    const strategy = new MergeSortStrategy(items);
 
-    // Act
-    let pair = strategy.nextPair();
-    while (pair !== null) {
-      strategy.submit({
-        leftId: pair.left.id,
-        rightId: pair.right.id,
-        winnerId: pair.left.id,
-      });
-      pair = strategy.nextPair();
-    }
+    runLeftAlwaysWins(strategy);
 
-    // Assert
-    expect(strategy.getRanking()).toEqual({
-      places: [a, b, c, d],
-      isFinal: true,
-    });
+    expect(strategy.getRanking()).toEqual({ places: items, isFinal: true });
     expect(strategy.isComplete()).toBe(true);
   });
-  it("верно сортирует нечетное число фильмов", () => {
-    // Arrange
-    const a = makeMovie("a");
-    const b = makeMovie("b");
-    const c = makeMovie("c");
-    const d = makeMovie("d");
-    const e = makeMovie("e");
-    const strategy = new MergeSortStrategy([a, b, c, d, e], identity);
 
-    // Act
-    let pair = strategy.nextPair();
-    while (pair !== null) {
-      strategy.submit({
-        leftId: pair.left.id,
-        rightId: pair.right.id,
-        winnerId: pair.left.id,
-      });
-      pair = strategy.nextPair();
-    }
+  it('верно сортирует нечётное число вариантов', () => {
+    const items = ['a', 'b', 'c', 'd', 'e'].map((id) => makeItem(id));
+    const strategy = new MergeSortStrategy(items);
 
-    // Assert
-    expect(strategy.getRanking()).toEqual({
-      places: [a, b, c, d, e],
-      isFinal: true,
-    });
-    expect(strategy.isComplete()).toBe(true);
+    runLeftAlwaysWins(strategy);
+
+    expect(strategy.getRanking()).toEqual({ places: items, isFinal: true });
   });
-  it("estimateTotal возвращает разумную положительную оценку", () => {
-    // Arrange
-    const movies = ["a", "b", "c", "d"].map(makeMovie);
-    const strategy = new MergeSortStrategy(movies, identity);
 
-    // Act
+  it('пул из одного варианта сразу готов', () => {
+    const strategy = new MergeSortStrategy([makeItem('a')]);
+
+    expect(strategy.nextPair()).toBeNull();
+    expect(strategy.isComplete()).toBe(true);
+    expect(strategy.estimateTotal()).toBe(0);
+  });
+
+  it('estimateTotal — положительная конечная оценка', () => {
+    const strategy = new MergeSortStrategy(['a', 'b', 'c', 'd'].map((id) => makeItem(id)));
+
     const estimate = strategy.estimateTotal();
 
-    // Assert
     expect(estimate).toBeGreaterThan(0);
     expect(Number.isFinite(estimate)).toBe(true);
   });

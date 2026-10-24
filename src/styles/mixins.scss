@@ -1,0 +1,30 @@
+// Подключается во все *.module.scss автоматически (см. vite.config.ts).
+
+$bp-tablet: 768px;
+$bp-desktop: 1024px;
+
+// mobile-first: базовые стили — для телефона, шире — через from()
+@mixin from($width) {
+  @media (min-width: $width) {
+    @content;
+  }
+}
+
+// заголовки капсом из кита: Display/XL 58 · L 46 · M 30 · S 19
+@mixin display($size) {
+  font-family: var(--font-display);
+  font-size: $size;
+  font-weight: 400;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+// «вдавливание» карточек и кнопок при нажатии
+@mixin pressable {
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+
+  &:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+  }
+}
