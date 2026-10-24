@@ -1,3 +1,4 @@
+import type { MovieSearch } from './MovieSearch.ts';
 import { toMovieDto, type MovieDto, type PoiskkinoSearchResponse } from './toMovieDto.ts';
 
 const BASE_URL = 'https://api.poiskkino.dev/v1.5';
@@ -13,7 +14,7 @@ export class PoiskkinoError extends Error {
   }
 }
 
-export class PoiskkinoClient {
+export class PoiskkinoClient implements MovieSearch {
   private readonly apiKey: string;
   private readonly fetchFn: typeof fetch;
 
