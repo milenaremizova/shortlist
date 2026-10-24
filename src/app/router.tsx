@@ -1,6 +1,14 @@
 import { createBrowserRouter } from 'react-router';
+
+import {
+  DuelPage,
+  EveningPage,
+  HistoryPage,
+  HomePage,
+  NotFoundPage,
+  RatingPage,
+} from '@/ui/pages/stubs';
 import { WelcomePage } from '@/ui/pages/WelcomePage/WelcomePage';
-import { DuelPage, EveningPage, HistoryPage, HomePage, NotFoundPage, RatingPage } from '@/ui/pages/stubs';
 
 /** Адреса совпадают с картой экранов в плане. Вложенные шаги режимов появятся внутри своих веток. */
 export const router = createBrowserRouter([

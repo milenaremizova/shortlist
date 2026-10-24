@@ -1,5 +1,6 @@
-import express from 'express';
 import cors from 'cors';
+import express from 'express';
+
 import type { Config } from './config.ts';
 import { moviesRouter } from './routes/movies.ts';
 

@@ -1,17 +1,21 @@
 // @vitest-environment jsdom
-import { describe, it, expect } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
-import { useChoiceSession } from './useChoiceSession';
+import { describe, expect, it } from 'vitest';
+
 import { createRatingSession } from '@/domain/factories';
 import { identity } from '@/domain/shuffle';
 import { makeItem } from '@/domain/testing';
+
+import { useChoiceSession } from './useChoiceSession';
 
 describe('useChoiceSession', () => {
   const pool = ['a', 'b', 'c'].map((id) => makeItem(id));
 
   it('choose и undo обновляют пару и прогресс на экране', () => {
     // Arrange
-    const { result } = renderHook(() => useChoiceSession(() => createRatingSession(pool, identity)));
+    const { result } = renderHook(() =>
+      useChoiceSession(() => createRatingSession(pool, identity)),
+    );
     const first = result.current.pair;
 
     // Act

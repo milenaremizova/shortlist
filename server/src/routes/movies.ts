@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import type { Config } from '../config.ts';
 
 /**

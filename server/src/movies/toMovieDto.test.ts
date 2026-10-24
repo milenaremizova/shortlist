@@ -10,7 +10,7 @@ function makeMovie(patch: Partial<PoiskkinoMovie> = {}): PoiskkinoMovie {
     alternativeName: 'Dune',
     year: 2021,
     movieLength: 155,
-    shortDescription: 'Наследник знатной семьи становится мессией пустынного народа',
+  shortDescription: 'Наследник знатной семьи становится мессией пустынного народа',
     description: 'Полное описание фильма',
     genres: [{ name: 'фантастика' }, { name: 'драма' }],
     poster: { url: 'https://img/full.jpg', previewUrl: 'https://img/preview.jpg' },
@@ -37,7 +37,7 @@ describe('toMovieDto', () => {
       posterUrl: 'https://img/preview.jpg',
     });
   });
-  
+
   it('без name берёт alternativeName', () => {
     // Arrange
     const movie = makeMovie({ name: null });

@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import { createRatingSession } from './factories';
 import { identity } from './shuffle';
 import { makeItem } from './testing';
@@ -7,7 +8,7 @@ describe('createRatingSession', () => {
   it('перемешивает пул один раз: после undo пары идут в том же порядке', () => {
     // Arrange: «перемешивание» разворачивает пул и считает вызовы
     let calls = 0;
-    const reverse = <T,>(items: readonly T[]): T[] => {
+    const reverse = <T>(items: readonly T[]): T[] => {
       calls++;
       return [...items].reverse();
     };

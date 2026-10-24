@@ -20,9 +20,33 @@ const GRID = [
 type Palette = 'peach' | 'butter' | 'white';
 
 const COLORS: Record<Palette, Record<string, string>> = {
-  peach: { o: '#1E1A3A', e: '#1E1A3A', P: '#FFFFFF', h: '#FFC6B0', b: '#FF9E7A', c: '#F2603F', s: '#FFFFFF' },
-  butter: { o: '#1E1A3A', e: '#1E1A3A', P: '#FFFFFF', h: '#FFE9A8', b: '#FFD66B', c: '#F2603F', s: '#FFFFFF' },
-  white: { o: '#1E1A3A', e: '#1E1A3A', P: '#FF9E7A', h: '#E3E6F5', b: '#FFFFFF', c: '#F2603F', s: '#FFFFFF' },
+  peach: {
+    o: '#1E1A3A',
+    e: '#1E1A3A',
+    P: '#FFFFFF',
+    h: '#FFC6B0',
+    b: '#FF9E7A',
+    c: '#F2603F',
+    s: '#FFFFFF',
+  },
+  butter: {
+    o: '#1E1A3A',
+    e: '#1E1A3A',
+    P: '#FFFFFF',
+    h: '#FFE9A8',
+    b: '#FFD66B',
+    c: '#F2603F',
+    s: '#FFFFFF',
+  },
+  white: {
+    o: '#1E1A3A',
+    e: '#1E1A3A',
+    P: '#FF9E7A',
+    h: '#E3E6F5',
+    b: '#FFFFFF',
+    c: '#F2603F',
+    s: '#FFFFFF',
+  },
 };
 
 interface Rect {

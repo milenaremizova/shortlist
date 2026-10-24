@@ -1,9 +1,9 @@
 import js from '@eslint/js';
-import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import tseslint from 'typescript-eslint';
 import { defineConfig, globalIgnores } from 'eslint/config';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default defineConfig([
   globalIgnores(['dist', 'server/dist']),
@@ -31,7 +31,10 @@ export default defineConfig([
         {
           patterns: [
             { group: ['react', 'react-dom', 'react-router'], message: 'domain не знает о React' },
-            { group: ['@/ui/*', '@/app/*', '@/api/*', '../ui/*', '../app/*', '../api/*'], message: 'domain не импортирует другие слои' },
+            {
+              group: ['@/ui/*', '@/app/*', '@/api/*', '../ui/*', '../app/*', '../api/*'],
+              message: 'domain не импортирует другие слои',
+            },
           ],
         },
       ],

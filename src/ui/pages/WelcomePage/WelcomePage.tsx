@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router';
+
 import { Button } from '@/ui/components/Button/Button';
 import { Tapochka } from '@/ui/components/Tapochka/Tapochka';
+
 import styles from './WelcomePage.module.scss';
 
 /** 01.2 · Приветствие. В v1 без аккаунтов: одна кнопка «Начать». */
@@ -24,7 +26,9 @@ export function WelcomePage() {
 
       <Tapochka className={styles.mascot} size={220} />
 
-      <p className={styles.lead}>Кино, ужин и напитки — пара тапов, и решено. Не договоритесь — выбирайте вдвоём вслепую.</p>
+      <p className={styles.lead}>
+        Кино, ужин и напитки — пара тапов, и решено. Не договоритесь — выбирайте вдвоём вслепую.
+      </p>
 
       <Button onClick={() => navigate('/home')}>Начать</Button>
     </main>
