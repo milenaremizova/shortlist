@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Секреты: ключи API живут только тут и в настройках хостинга
+.env
+.env.*
+!.env.example

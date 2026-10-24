@@ -1,0 +1,41 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  min-height: 100dvh;
+  padding: var(--space-14) var(--space-6) 34px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.tagline {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.title {
+  @include display(58px);
+}
+
+.accent {
+  color: var(--color-bg-accent);
+}
+
+.mascot {
+  align-self: flex-end;
+}
+
+.lead {
+  margin-top: auto;
+}
