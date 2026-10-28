@@ -1,16 +1,18 @@
 interface CachedValue<T> {
   value: T;
-  expiresAt: number; // момент (в мс), после которого запись считается устаревшей
+  expiresAt: number;
 }
 
 export class TtlCache<T> {
   private readonly store = new Map<string, CachedValue<T>>();
   private readonly ttlMs: number;
   private readonly now: () => number;
+  private readonly maxEntries: number;
 
-  constructor(ttlMs: number, now: () => number = Date.now) {
+  constructor(ttlMs: number, now: () => number = Date.now, maxEntries = 500) {
     this.ttlMs = ttlMs;
     this.now = now;
+    this.maxEntries = maxEntries;
   }
 
   get(key: string): T | undefined {
@@ -25,6 +27,13 @@ export class TtlCache<T> {
   }
 
   set(key: string, value: T): void {
+    this.store.delete(key);
+    if (this.store.size >= this.maxEntries) {
+      const oldest = this.store.keys().next().value;
+      if (oldest !== undefined) {
+        this.store.delete(oldest);
+      }
+    }
     this.store.set(key, { value, expiresAt: this.now() + this.ttlMs });
   }
 }

@@ -20,7 +20,7 @@ export function moviesRouter(search: MovieSearch) {
 
   router.get('/search', async (req, res) => {
     const params = parseSearchParams(req.query);
-  if (params === null) {
+    if (params === null) {
       res
         .status(400)
         .json({ error: 'Некорректный запрос: q от 1 до 100 символов, page от 1 до 10' });

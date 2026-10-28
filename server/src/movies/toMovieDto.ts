@@ -39,8 +39,7 @@ export function toMovieDto(movie: PoiskkinoMovie): MovieDto {
     description: movie.shortDescription || movie.description || null,
     genre: movie.genres?.[0]?.name ?? null,
     posterUrl: movie.poster?.previewUrl || movie.poster?.url || null,
-    // ?? беру значение, а если null или undefined, подставляю null
     year: movie.year ?? null,
-    durationMin: movie.movieLength ?? null,
+    durationMin: movie.movieLength || null,
   };
 }

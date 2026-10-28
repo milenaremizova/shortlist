@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
+
 import { PoiskkinoClient, PoiskkinoError } from './PoiskkinoClient.ts';
 
 /** Подставной fetch: возвращает заготовленный ответ и в сеть не ходит. */

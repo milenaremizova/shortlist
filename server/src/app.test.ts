@@ -1,7 +1,6 @@
 // Встроенный раннер Node (node:test): серверу не нужен отдельный тестовый фреймворк.
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-
 import request from 'supertest';
 
 import { createApp } from './app.ts';

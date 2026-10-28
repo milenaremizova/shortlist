@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-
 import request from 'supertest';
 
 import { createApp } from '../app.ts';
@@ -62,5 +61,24 @@ describe('GET /api/movies/search: ошибки источника', () => {
 
     assert.equal(res.status, 502);
     assert.ok(!res.text.includes('внутренняя деталь'));
+  });
+
+
+});
+
+describe('GET /api/movies/search: лимит запросов', () => {
+  it('после 30 запросов в минуту отвечает 429', async () => {
+    // Arrange
+    const app = createApp(readConfig({}), { search: async () => [] });
+
+    // Act
+    let last = 0;
+    for (let i = 0; i < 31; i++) {
+      const res = await request(app).get('/api/movies/search?q=дюна');
+      last = res.status;
+    }
+
+    // Assert
+    assert.equal(last, 429);
   });
 });

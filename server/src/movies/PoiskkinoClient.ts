@@ -3,6 +3,7 @@ import { toMovieDto, type MovieDto, type PoiskkinoSearchResponse } from './toMov
 
 const BASE_URL = 'https://api.poiskkino.dev/v1.5';
 const PAGE_SIZE = 10;
+const TIMEOUT_MS = 5000;
 
 export class PoiskkinoError extends Error {
   readonly status: number;
@@ -31,10 +32,11 @@ export class PoiskkinoClient implements MovieSearch {
 
     const resp = await this.fetchFn(url, {
       headers: { 'X-API-KEY': this.apiKey },
+      signal: AbortSignal.timeout(TIMEOUT_MS),
     });
 
     if (!resp.ok) throw new PoiskkinoError(resp.status, `ПоискКино ответил ${resp.status}`);
     const data = (await resp.json()) as PoiskkinoSearchResponse;
-    return data.docs.map(toMovieDto);
+    return data.docs.map(toMovieDto).filter((movie) => movie.posterUrl !== null);
   }
 }
