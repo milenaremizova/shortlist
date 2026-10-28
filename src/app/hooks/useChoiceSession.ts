@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+
 import type { ChoiceSession } from '@/domain/ChoiceSession';
 import { createRatingSession } from '@/domain/factories';
 import type { Item, Pair, Ranking, SessionProgress } from '@/domain/types';

@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { MergeSortStrategy } from './MergeSortStrategy';
+import { describe, expect, it } from 'vitest';
+
 import { makeItem } from '../testing';
+import { MergeSortStrategy } from './MergeSortStrategy';
 
 /** Прогоняет стратегию до конца: всегда побеждает левый вариант пары. */
 function runLeftAlwaysWins(strategy: MergeSortStrategy): void {

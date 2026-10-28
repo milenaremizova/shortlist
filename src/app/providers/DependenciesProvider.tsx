@@ -1,5 +1,7 @@
 import { useState, type ReactNode } from 'react';
+
 import { LocalStorageHistoryRepository } from '@/api/history/LocalStorageHistoryRepository';
+
 import { DependenciesContext, type Dependencies } from './dependencies';
 
 interface Props {

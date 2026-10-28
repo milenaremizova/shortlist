@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { LocalStorageHistoryRepository } from './LocalStorageHistoryRepository';
+import { describe, expect, it } from 'vitest';
+
 import type { HistoryEntry } from './HistoryRepository';
+import { LocalStorageHistoryRepository } from './LocalStorageHistoryRepository';
 
 /** Хранилище в памяти вместо localStorage. */
 function memoryStorage(initial: Record<string, string> = {}) {
@@ -36,7 +37,9 @@ describe('LocalStorageHistoryRepository', () => {
   });
 
   it('битый JSON в хранилище не роняет приложение', () => {
-    const repo = new LocalStorageHistoryRepository(memoryStorage({ 'shortlist:history:v1': '{не json' }));
+    const repo = new LocalStorageHistoryRepository(
+      memoryStorage({ 'shortlist:history:v1': '{не json' }),
+    );
 
     expect(repo.list()).toEqual([]);
   });

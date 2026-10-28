@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+
 import { Tapochka } from '../Tapochka/Tapochka';
 import styles from './ScreenStub.module.scss';
 

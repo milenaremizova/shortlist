@@ -10,7 +10,10 @@ import type { Item } from './types';
  */
 
 /** «Свой рейтинг». Пул перемешивается один раз здесь, поэтому отмена хода не меняет порядок пар. */
-export function createRatingSession(pool: readonly Item[], shuffleFn: ShuffleFn = shuffle): ChoiceSession {
+export function createRatingSession(
+  pool: readonly Item[],
+  shuffleFn: ShuffleFn = shuffle,
+): ChoiceSession {
   const ordered = shuffleFn(pool);
   return new RankingSession(() => new MergeSortStrategy(identity(ordered)));
 }
