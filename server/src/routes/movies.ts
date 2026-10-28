@@ -3,7 +3,7 @@ import { Router, type Request } from 'express';
 import type { MovieSearch } from '../movies/MovieSearch.ts';
 import { PoiskkinoError } from '../movies/PoiskkinoClient.ts';
 
-function parseSearchParams(query: Request['query']): { q: string; page: number } | null {
+export function parseSearchParams(query: Request['query']): { q: string; page: number } | null {
   if (typeof query.q !== 'string') return null;
 
   const q = query.q.trim();
