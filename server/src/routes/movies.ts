@@ -1,25 +1,43 @@
-import { Router } from 'express';
+import { Router, type Request } from 'express';
 
-import type { Config } from '../config.ts';
+import type { MovieSearch } from '../movies/MovieSearch.ts';
+import { PoiskkinoError } from '../movies/PoiskkinoClient.ts';
 
-/**
- * Прокси к ПоискКино. Ключ добавляется здесь, в браузер уходит только урезанный ответ.
- *
- * TODO(этап 1):
- *  - GET /search?q=…&page=1 → https://api.poiskkino.dev/v1.5/movie/search, заголовок X-API-KEY, limit=10
- *  - ответ клиенту: { id, title, year, posterUrl } — постер обязателен для карточки
- *  - кэш в памяти на 24 ч (лимит бесплатного тарифа — 200 запросов в день)
- *  - ошибки: 400 пустой запрос · 429 лимит · 502 ПоискКино не ответил
- */
-export function moviesRouter(config: Config) {
+function parseSearchParams(query: Request['query']): { q: string; page: number } | null {
+  if (typeof query.q !== 'string') return null;
+
+  const q = query.q.trim();
+  if (q.length < 1 || q.length > 100) return null;
+
+  const page = Number(query.page ?? 1);
+  if (!Number.isInteger(page) || page < 1 || page > 10) return null;
+
+  return { q, page };
+}
+
+export function moviesRouter(search: MovieSearch) {
   const router = Router();
 
-  router.get('/search', (_req, res) => {
-    if (!config.poiskkinoApiKey) {
-      res.status(503).json({ error: 'POISKKINO_API_KEY не задан в server/.env' });
+  router.get('/search', async (req, res) => {
+    const params = parseSearchParams(req.query);
+  if (params === null) {
+      res
+        .status(400)
+        .json({ error: 'Некорректный запрос: q от 1 до 100 символов, page от 1 до 10' });
       return;
     }
-    res.status(501).json({ error: 'Поиск фильмов ещё не реализован' });
+
+    try {
+      const movies = await search.search(params.q, params.page);
+      res.json(movies);
+    } catch (error) {
+      console.log(error);
+      if (error instanceof PoiskkinoError && error.status === 403) {
+        res.status(429).json({ error: 'Превышен лимит запросов' });
+        return;
+      }
+      res.status(502).json({ error: 'Внешний сервер не отвечает' });
+    }
   });
 
   return router;
