@@ -1,7 +1,5 @@
-/** Функция перемешивания передаётся снаружи — в тестах вместо неё подставляем identity. */
 export type ShuffleFn = <T>(items: readonly T[]) => T[];
 
-/** Тасование Фишера — Йетса. Возвращает новый массив, исходный не меняет. */
 export const shuffle: ShuffleFn = (items) => {
   const result = [...items];
   for (let i = result.length - 1; i > 0; i--) {
@@ -11,5 +9,4 @@ export const shuffle: ShuffleFn = (items) => {
   return result;
 };
 
-/** Без перемешивания: порядок как есть. Для тестов и повторов. */
 export const identity: ShuffleFn = (items) => [...items];

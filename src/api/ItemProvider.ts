@@ -10,5 +10,4 @@ export interface ItemProvider {
   search(query: string, signal?: AbortSignal): Promise<Item[]>;
 }
 
-// TODO(этап 2): MovieProvider — GET /api/movies/search → Item (постер в imageUrl)
 // TODO(этап 3): PresetProvider — food.json / drinks.json, фото через прокси к Pexels
