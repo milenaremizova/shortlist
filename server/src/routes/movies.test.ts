@@ -62,8 +62,6 @@ describe('GET /api/movies/search: ошибки источника', () => {
     assert.equal(res.status, 502);
     assert.ok(!res.text.includes('внутренняя деталь'));
   });
-
-
 });
 
 describe('GET /api/movies/search: лимит запросов', () => {

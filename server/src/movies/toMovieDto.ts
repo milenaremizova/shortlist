@@ -1,4 +1,3 @@
-/** фильм в ответе ПоискКино (SearchMovieDtoV1_4). обязателен только id. */
 export interface PoiskkinoMovie {
   id: number;
   name?: string | null;
@@ -12,7 +11,6 @@ export interface PoiskkinoMovie {
   poster?: { url?: string | null; previewUrl?: string | null } | null;
 }
 
-/** ответ поиска целиком */
 export interface PoiskkinoSearchResponse {
   docs: PoiskkinoMovie[];
   total: number;
@@ -21,7 +19,6 @@ export interface PoiskkinoSearchResponse {
   pages: number;
 }
 
-/** фильм, который сервер отдает клиенту */
 export interface MovieDto {
   id: string;
   title: string;
