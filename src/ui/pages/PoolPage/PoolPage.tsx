@@ -81,24 +81,43 @@ export function PoolPage({ onStart }: Props) {
         <input
           type="search"
           className={styles.input}
-          // TODO 4: управляемое поле на search.query / search.setQuery
+          value={search.query}
+          onChange={(e) => search.setQuery(e.target.value)}
           disabled={pool.isFull}
           placeholder={pool.isFull ? `Максимум ${MAX_POOL} вариантов` : 'Название фильма'}
         />
       </label>
 
       <p className={styles.status} aria-live="polite">
-        {/* TODO 5: по search.status:
-                'loading' → «Ищу…»
-                'error'   → search.error
-                'done' и search.items пустой → «Ничего не нашлось» */}
+        {search.status === 'loading' && 'Ищу...'}
+        {search.status === 'error' && search.error}
+        {search.status === 'done' && search.items.length === 0 && 'Ничего не нашлось'}
       </p>
 
       <ul className={styles.suggestions}>
-        {/* TODO 6: подсказка на каждый фильм из search.items.
-                Внутри <li> — <button>, по нажатию handlePick(item).
-                В кнопке: постер, название, item.meta.
-                Если фильм уже в пуле — кнопка disabled */}
+        {search.items.map((item) => (
+          <li key={item.id}>
+            <button
+              type="button"
+              onClick={() => handlePick(item)}
+              disabled={pool.items.some((x) => x.id === item.id)}
+              className={styles.suggestion}
+            >
+              {item.imageUrl && (
+                <img
+                  className={styles.poster}
+                  src={item.imageUrl}
+                  alt=""
+                  width={40}
+                  height={60}
+                  loading="lazy"
+                />
+              )}
+              <span className={styles.suggestionTitle}>{item.title}</span>
+              <span className={styles.suggestionMeta}>{item.meta}</span>
+            </button>
+          </li>
+        ))}
       </ul>
 
       {!pool.canStart && (
