@@ -33,7 +33,7 @@ export function toMovieDto(movie: PoiskkinoMovie): MovieDto {
   return {
     id: String(movie.id),
     title: movie.name || movie.alternativeName || movie.enName || 'Без названия',
-    description: movie.shortDescription || movie.description || null,
+    description: movie.shortDescription || null,
     genre: movie.genres?.[0]?.name ?? null,
     posterUrl: movie.poster?.previewUrl || movie.poster?.url || null,
     year: movie.year ?? null,

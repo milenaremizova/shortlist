@@ -1,0 +1,69 @@
+.card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-3);
+  border: 2px solid var(--color-text-primary);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-surface);
+  box-shadow: var(--shadow-hard-m);
+  color: var(--color-text-primary);
+  text-align: left;
+  cursor: pointer;
+
+  @include pressable;
+}
+
+.image,
+.placeholder {
+  flex-shrink: 0;
+  width: 88px;
+  height: 120px;
+  border-radius: var(--radius-sm);
+}
+
+.image {
+  object-fit: cover;
+}
+
+.placeholder {
+  display: block;
+  background: var(--color-bg-surface-muted);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.tag {
+  align-self: flex-start;
+  padding: 2px var(--space-2);
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border-radius: var(--radius-full);
+  background: var(--color-bg-accent-soft);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.title {
+  @include display(19px);
+
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.description {
+  margin-top: var(--space-1);
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  line-height: 1.35;
+}
