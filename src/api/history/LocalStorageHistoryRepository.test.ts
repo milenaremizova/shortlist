@@ -51,4 +51,18 @@ describe('LocalStorageHistoryRepository', () => {
 
     expect(repo.list()).toEqual([]);
   });
+
+  it('битая запись отсеивается, остальные остаются', () => {
+    const stored = JSON.stringify([
+      entry('good'),
+      { id: 'broken', title: 'без items и mode' },
+      'просто строка',
+      entry('also-good'),
+    ]);
+    const repo = new LocalStorageHistoryRepository(
+      memoryStorage({ 'shortlist:history:v1': stored }),
+    );
+
+    expect(repo.list().map((e) => e.id)).toEqual(['good', 'also-good']);
+  });
 });
