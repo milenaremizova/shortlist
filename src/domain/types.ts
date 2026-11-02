@@ -5,6 +5,7 @@ export interface Item {
   title: string;
   category: ItemCategory;
   tag?: string;
+  description?: string;
   meta?: string;
   imageUrl: string | null;
 }

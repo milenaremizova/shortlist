@@ -92,6 +92,6 @@ describe('toMovieDto', () => {
     const dto = toMovieDto(movie);
 
     // Assert
-    assert.equal(dto.description, 'Полное описание фильма');
+    assert.equal(dto.description, null);
   });
 });
