@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import type { Ranking } from '@/domain/types';
 import { Button } from '@/ui/components/Button/Button';
 
@@ -13,6 +15,13 @@ interface Props {
 
 /** 05.4 · Свой рейтинг — итог. */
 export function ResultPage({ title, ranking, onSave, onRestart, onExit }: Props) {
+  const [saved, setSaved] = useState(false);
+
+  function handleSave() {
+    onSave();
+    setSaved(true);
+  }
+
   return (
     <main className={styles.screen}>
       <header className={styles.header}>
@@ -40,7 +49,9 @@ export function ResultPage({ title, ranking, onSave, onRestart, onExit }: Props)
       </ol>
 
       <div className={styles.actions}>
-        <Button onClick={onSave}>Сохранить</Button>
+        <Button onClick={handleSave} disabled={saved}>
+          {saved ? 'Сохранено' : 'Сохранить'}
+        </Button>
         <Button onClick={onRestart} variant="secondary">
           Сравнить заново
         </Button>

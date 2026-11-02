@@ -11,7 +11,9 @@ export class LocalStorageHistoryRepository implements HistoryRepository {
     this.storage = storage;
   }
 
-  list(): HistoryEntry[] {
+  async list(): Promise<HistoryEntry[]> {
+    
+
     try {
       const raw = this.storage?.getItem(KEY);
       const parsed: unknown = raw ? JSON.parse(raw) : [];
@@ -22,11 +24,11 @@ export class LocalStorageHistoryRepository implements HistoryRepository {
     }
   }
 
-  save(entry: HistoryEntry): void {
-    this.write([entry, ...this.list().filter((e) => e.id !== entry.id)]);
+  async save(entry: HistoryEntry): Promise<void> {
+    this.write([entry, await this.list().filter((e) => e.id !== entry.id)]);
   }
 
-  remove(id: string): void {
+  async remove(id: string): void {
     this.write(this.list().filter((e) => e.id !== id));
   }
 
