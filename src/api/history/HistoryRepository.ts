@@ -18,7 +18,7 @@ export interface HistoryEntry {
  * Сейчас — localStorage, после аккаунтов — HTTP, и экраны при этом не меняются.
  */
 export interface HistoryRepository {
-  list(): HistoryEntry[];
-  save(entry: HistoryEntry): void;
-  remove(id: string): void;
+  list(): Promise<HistoryEntry[]>;
+  save(entry: HistoryEntry): Promise<void>;
+  remove(id: string): Promise<void>;
 }

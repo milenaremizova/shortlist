@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router';
 
+import { useDependencies } from '@/app/providers/dependencies';
 import type { Ranking } from '@/domain/types';
 import { ComparisonPage } from '@/ui/pages/ComparisonPage/ComparisonPage';
 import { PoolPage, type PoolDraft } from '@/ui/pages/PoolPage/PoolPage';
@@ -9,6 +10,7 @@ import { ResultPage } from '@/ui/pages/ResultPage/ResultPage';
 /** «Свой рейтинг»: пул -> сравнение -> итог. Хранит данные между шагами и решает, куда идти. */
 export function RatingFlow() {
   const navigate = useNavigate();
+  const { history } = useDependencies();
   const [draft, setDraft] = useState<PoolDraft | null>(null);
   const [ranking, setRanking] = useState<Ranking | null>(null);
 
@@ -24,6 +26,18 @@ export function RatingFlow() {
     },
     [navigate],
   );
+
+  async function handleSave(): Promise<void> {
+    if (!draft || !ranking) throw new Error('Нечего сохранять');
+
+    await history.save({
+      id: crypto.randomUUID(),
+      mode: 'rating',
+      createdAt: new Date().toISOString(),
+      title: draft.title,
+      items: ranking.places,
+    });
+  }
 
   return (
     <Routes>
@@ -50,7 +64,7 @@ export function RatingFlow() {
             <ResultPage
               title={draft.title}
               ranking={ranking}
-              onSave={() => {}}
+              onSave={handleSave}
               onRestart={() => navigate('/rating/compare')}
               onExit={() => navigate('/home')}
             />
