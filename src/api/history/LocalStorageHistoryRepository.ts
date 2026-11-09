@@ -12,32 +12,31 @@ export class LocalStorageHistoryRepository implements HistoryRepository {
   }
 
   async list(): Promise<HistoryEntry[]> {
-    
+    return this.read();
+  }
 
+  private read(): HistoryEntry[] {
     try {
       const raw = this.storage?.getItem(KEY);
       const parsed: unknown = raw ? JSON.parse(raw) : [];
       return Array.isArray(parsed) ? parsed.filter(isHistoryEntry) : [];
     } catch {
-      // битые данные или хранилище недоступно - показываем пустую историю, а не белый экран
       return [];
     }
   }
 
   async save(entry: HistoryEntry): Promise<void> {
-    this.write([entry, await this.list().filter((e) => e.id !== entry.id)]);
+    const others = this.read().filter((e) => e.id !== entry.id);
+    this.write([entry, ...others]);
   }
 
-  async remove(id: string): void {
-    this.write(this.list().filter((e) => e.id !== id));
+  async remove(id: string): Promise<void> {
+    this.write(this.read().filter((e) => e.id !== id));
   }
 
   private write(entries: HistoryEntry[]): void {
-    try {
-      this.storage?.setItem(KEY, JSON.stringify(entries));
-    } catch {
-      // приватный режим или переполнение: молча живём без истории
-    }
+    if (this.storage === null) throw new Error('Хранилище недоступно');
+    this.storage.setItem(KEY, JSON.stringify(entries));
   }
 }
 

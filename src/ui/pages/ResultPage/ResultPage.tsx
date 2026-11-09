@@ -8,18 +8,33 @@ import styles from './ResultPage.module.scss';
 interface Props {
   title: string;
   ranking: Ranking;
-  onSave: () => void;
+  onSave: () => Promise<void>;
   onRestart: () => void;
   onExit: () => void;
 }
 
+type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
+
+const SAVE_LABEL: Record<SaveStatus, string> = {
+  idle: 'Сохранить',
+  saving: 'Сохраняю…',
+  saved: 'Сохранено ✓',
+  error: 'Не удалось сохранить',
+};
+
 /** 05.4 · Свой рейтинг — итог. */
 export function ResultPage({ title, ranking, onSave, onRestart, onExit }: Props) {
-  const [saved, setSaved] = useState(false);
+  const [status, setStatus] = useState<SaveStatus>('idle');
 
-  function handleSave() {
-    onSave();
-    setSaved(true);
+  async function handleSave() {
+    setStatus('saving');
+    try {
+      await onSave();
+      setStatus('saved');
+    } catch (error) {
+      console.error(error);
+      setStatus('error');
+    }
   }
 
   return (
@@ -49,8 +64,8 @@ export function ResultPage({ title, ranking, onSave, onRestart, onExit }: Props)
       </ol>
 
       <div className={styles.actions}>
-        <Button onClick={handleSave} disabled={saved}>
-          {saved ? 'Сохранено' : 'Сохранить'}
+        <Button onClick={handleSave} disabled={status === 'saving' || status === 'saved'}>
+          {SAVE_LABEL[status]}
         </Button>
         <Button onClick={onRestart} variant="secondary">
           Сравнить заново

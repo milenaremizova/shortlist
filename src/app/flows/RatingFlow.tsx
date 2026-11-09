@@ -10,7 +10,7 @@ import { ResultPage } from '@/ui/pages/ResultPage/ResultPage';
 /** «Свой рейтинг»: пул -> сравнение -> итог. Хранит данные между шагами и решает, куда идти. */
 export function RatingFlow() {
   const navigate = useNavigate();
-  const { history } = useDependencies(); // ← репозиторий истории из DI
+  const { history } = useDependencies();
   const [draft, setDraft] = useState<PoolDraft | null>(null);
   const [ranking, setRanking] = useState<Ranking | null>(null);
 
@@ -27,10 +27,10 @@ export function RatingFlow() {
     [navigate],
   );
 
-  function handleSave() {
-    if (!draft || !ranking) return;
+  async function handleSave(): Promise<void> {
+    if (!draft || !ranking) throw new Error('Нечего сохранять');
 
-    history.save({
+    await history.save({
       id: crypto.randomUUID(),
       mode: 'rating',
       createdAt: new Date().toISOString(),
