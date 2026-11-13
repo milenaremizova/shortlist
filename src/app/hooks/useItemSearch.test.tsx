@@ -4,6 +4,7 @@ import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ApiError } from '@/api/ApiError';
+import type { RatingDraftRepository } from '@/api/draft/RatingDraftRepository';
 import type { HistoryRepository } from '@/api/history/HistoryRepository';
 import type { ItemProvider } from '@/api/ItemProvider';
 import { makeItem } from '@/domain/testing';
@@ -14,7 +15,11 @@ import { useItemSearch } from './useItemSearch';
 
 function renderSearch(search: ItemProvider['search']) {
   const provider: ItemProvider = { category: 'film', search };
-  const deps = { history: {} as HistoryRepository, providers: { film: provider } };
+  const deps = {
+    history: {} as HistoryRepository,
+    drafts: {} as RatingDraftRepository,
+    providers: { film: provider },
+  };
 
   const wrapper = ({ children }: { children: ReactNode }) => (
     <DependenciesProvider value={deps}>{children}</DependenciesProvider>

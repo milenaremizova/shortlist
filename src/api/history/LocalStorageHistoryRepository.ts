@@ -1,3 +1,5 @@
+import { safeLocalStorage } from '@/api/storage';
+
 import type { HistoryEntry, HistoryRepository } from './HistoryRepository';
 
 const KEY = 'shortlist:history:v1';
@@ -37,14 +39,6 @@ export class LocalStorageHistoryRepository implements HistoryRepository {
   private write(entries: HistoryEntry[]): void {
     if (this.storage === null) throw new Error('Хранилище недоступно');
     this.storage.setItem(KEY, JSON.stringify(entries));
-  }
-}
-
-function safeLocalStorage(): Storage | null {
-  try {
-    return globalThis.localStorage ?? null;
-  } catch {
-    return null;
   }
 }
 

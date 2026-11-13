@@ -3,15 +3,10 @@ import { useNavigate } from 'react-router';
 
 import { useItemSearch } from '@/app/hooks/useItemSearch';
 import { MAX_POOL, MIN_POOL, usePool } from '@/app/hooks/usePool';
-import type { Item } from '@/domain/types';
+import type { Item, PoolDraft } from '@/domain/types';
 import { Button } from '@/ui/components/Button/Button';
 
 import styles from './PoolPage.module.scss';
-
-export interface PoolDraft {
-  title: string;
-  items: Item[];
-}
 
 interface Props {
   onStart: (draft: PoolDraft) => void;

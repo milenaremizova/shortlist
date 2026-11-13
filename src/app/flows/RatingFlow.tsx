@@ -2,9 +2,9 @@ import { useCallback, useState } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router';
 
 import { useDependencies } from '@/app/providers/dependencies';
-import type { Ranking } from '@/domain/types';
+import type { PoolDraft, Ranking } from '@/domain/types';
 import { ComparisonPage } from '@/ui/pages/ComparisonPage/ComparisonPage';
-import { PoolPage, type PoolDraft } from '@/ui/pages/PoolPage/PoolPage';
+import { PoolPage } from '@/ui/pages/PoolPage/PoolPage';
 import { ResultPage } from '@/ui/pages/ResultPage/ResultPage';
 
 /** «Свой рейтинг»: пул -> сравнение -> итог. Хранит данные между шагами и решает, куда идти. */
