@@ -10,22 +10,38 @@ import { ResultPage } from '@/ui/pages/ResultPage/ResultPage';
 /** «Свой рейтинг»: пул -> сравнение -> итог. Хранит данные между шагами и решает, куда идти. */
 export function RatingFlow() {
   const navigate = useNavigate();
-  const { history } = useDependencies();
-  const [draft, setDraft] = useState<PoolDraft | null>(null);
-  const [ranking, setRanking] = useState<Ranking | null>(null);
+  const { history, drafts } = useDependencies();
+  const [saved] = useState(() => drafts.load());
+  const [draft, setDraft] = useState<PoolDraft | null>(
+    saved ? { title: saved.title, items: saved.items } : null,
+  );
+  const [ranking, setRanking] = useState<Ranking | null>(saved ? saved.ranking : null);
 
   function handleStart(next: PoolDraft) {
+    drafts.save({ ...next, ranking: null });
     setDraft(next);
     navigate('/rating/compare');
   }
 
   const handleDone = useCallback(
     (result: Ranking) => {
+      if (draft) drafts.save({ ...draft, ranking: result });
       setRanking(result);
       navigate('/rating/result', { replace: true });
     },
-    [navigate],
+    [navigate, draft, drafts],
   );
+
+  function handleRestart() {
+    if (draft) drafts.save({ ...draft, ranking: null });
+    setRanking(null);
+    navigate('/rating/compare');
+  }
+
+  function handleExit() {
+    drafts.clear();
+    navigate('/home');
+  }
 
   async function handleSave(): Promise<void> {
     if (!draft || !ranking) throw new Error('Нечего сохранять');
@@ -47,11 +63,7 @@ export function RatingFlow() {
         path="compare"
         element={
           draft ? (
-            <ComparisonPage
-              items={draft.items}
-              onDone={handleDone}
-              onExit={() => navigate('/home')}
-            />
+            <ComparisonPage items={draft.items} onDone={handleDone} onExit={handleExit} />
           ) : (
             <Navigate to="/rating/new" replace />
           )
@@ -65,8 +77,8 @@ export function RatingFlow() {
               title={draft.title}
               ranking={ranking}
               onSave={handleSave}
-              onRestart={() => navigate('/rating/compare')}
-              onExit={() => navigate('/home')}
+              onRestart={handleRestart}
+              onExit={handleExit}
             />
           ) : (
             <Navigate to="/rating/new" replace />
