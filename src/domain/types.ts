@@ -30,3 +30,8 @@ export interface SessionProgress {
   done: number;
   estimated: number;
 }
+
+export interface PoolDraft {
+  title: string;
+  items: Item[];
+}

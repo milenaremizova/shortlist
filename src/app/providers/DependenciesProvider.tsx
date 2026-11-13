@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react';
 
+import { LocalStorageRatingDraftRepository } from '@/api/draft/LocalStorageRatingDraftRepository';
 import { LocalStorageHistoryRepository } from '@/api/history/LocalStorageHistoryRepository';
 import { MovieProvider } from '@/api/movies/MovieProvider';
 
@@ -15,6 +16,7 @@ export function DependenciesProvider({ children, value }: Props) {
     () =>
       value ?? {
         history: new LocalStorageHistoryRepository(),
+        drafts: new LocalStorageRatingDraftRepository(),
         providers: {
           film: new MovieProvider(import.meta.env.VITE_API_URL),
         },
