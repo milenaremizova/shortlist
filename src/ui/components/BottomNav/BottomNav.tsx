@@ -9,7 +9,7 @@ export function BottomNav() {
         Главная
       </NavLink>
       <NavLink to="/history" className={linkClass}>
-        Вечера
+        История
       </NavLink>
     </nav>
   );

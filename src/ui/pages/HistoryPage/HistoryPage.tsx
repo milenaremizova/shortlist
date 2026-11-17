@@ -5,14 +5,15 @@ import { BottomNav } from '@/ui/components/BottomNav/BottomNav';
 import { Tapochka } from '@/ui/components/Tapochka/Tapochka';
 import { dayParts, groupByMonth, MODE_LABEL, summary } from '@/ui/history/formatHistory';
 
+import { DeleteEntryButton } from './DeleteEntryButton';
 import styles from './HistoryPage.module.scss';
 
 export function HistoryPage() {
-  const { entries, status } = useHistory();
+  const { entries, status, removeEntry } = useHistory();
 
   return (
     <main className={styles.screen}>
-      <h1 className={styles.title}>Вечера</h1>
+      <h1 className={styles.title}>История</h1>
 
       {status === 'loading' && <p className={styles.note}>Загружаю…</p>}
 
@@ -38,17 +39,34 @@ export function HistoryPage() {
               {group.entries.map((entry) => {
                 const date = dayParts(entry.createdAt);
                 return (
-                  <li key={entry.id} className={styles.entry}>
-                    <span className={styles.date}>
-                      <span className={styles.day}>{date.day}</span>
-                      <span className={styles.dayMonth}>{date.month}</span>
-                    </span>
-                    <span className={styles.text}>
-                      <span className={styles.entryTitle}>{entry.title}</span>
-                      <span className={styles.meta}>
-                        {MODE_LABEL[entry.mode]} · {summary(entry)}
-                      </span>
-                    </span>
+                  <li key={entry.id}>
+                    <details className={styles.entry}>
+                      <summary className={styles.summary}>
+                        <span className={styles.date}>
+                          <span className={styles.day}>{date.day}</span>
+                          <span className={styles.dayMonth}>{date.month}</span>
+                        </span>
+                        <span className={styles.text}>
+                          <span className={styles.entryTitle}>{entry.title}</span>
+                          <span className={styles.meta}>
+                            {MODE_LABEL[entry.mode]} · {summary(entry)}
+                          </span>
+                        </span>
+                        <span className={styles.chevron} aria-hidden="true" />
+                      </summary>
+
+                      <ol className={styles.places}>
+                        {entry.items.map((item) => (
+                          <li key={item.id} className={styles.place}>
+                            <span className={styles.placeTitle}>{item.title}</span>
+                            {item.meta && <span className={styles.placeMeta}>{item.meta}</span>}
+                          </li>
+                        ))}
+                        <div className={styles.actions}>
+                          <DeleteEntryButton onDelete={() => removeEntry(entry.id)} />
+                        </div>
+                      </ol>
+                    </details>
                   </li>
                 );
               })}

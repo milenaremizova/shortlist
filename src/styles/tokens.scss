@@ -25,6 +25,7 @@
   --color-bg-surface: var(--white);
   --color-bg-surface-muted: var(--mist-100);
   --color-bg-accent: var(--butter-400);
+  --color-accent-mint: var(--mint-400);
   --color-bg-accent-pressed: var(--butter-500);
   --color-bg-accent-soft: var(--butter-200);
   --color-bg-warm: var(--peach-400);
@@ -38,7 +39,7 @@
   --color-text-placeholder: var(--ink-400);
   --color-text-on-screen: var(--white);
   --color-border-error: var(--coral-500);
-  --color-signal-success: var(--mint-400); // только «Совпали!», «Вечер собран!» и успех
+  --color-signal-success: var(--mint-400);
 
   // шрифты
   --font-display: 'Dela Gothic One', system-ui, sans-serif;

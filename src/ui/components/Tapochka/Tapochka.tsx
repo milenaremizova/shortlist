@@ -1,7 +1,3 @@
-/**
- * Маскот. Пиксельная сетка 20×12 снята с макета: масштаб 5:3, без сглаживания.
- * Peach — основной, Butter — на тёплом фоне, White — пара-инверсия для «Пары тапочек».
- */
 const GRID = [
   '............ooo.....',
   '...........oPPPo....',
@@ -56,7 +52,6 @@ interface Rect {
   fill: string;
 }
 
-/** Склеиваем соседние пиксели одного цвета в полоски — меньше узлов в DOM. */
 function toRects(palette: Palette): Rect[] {
   const rects: Rect[] = [];
   GRID.forEach((row, y) => {
@@ -74,7 +69,6 @@ function toRects(palette: Palette): Rect[] {
 
 interface Props {
   palette?: Palette;
-  /** Ширина в px; высота считается по пропорции 5:3. */
   size?: number;
   mirrored?: boolean;
   className?: string;

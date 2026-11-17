@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import type { HistoryEntry } from '@/api/history/HistoryRepository';
 import { useDependencies } from '@/app/providers/dependencies';
@@ -31,5 +31,13 @@ export function useHistory() {
     };
   }, [history]);
 
-  return { entries, status };
+  const removeEntry = useCallback(
+    async (id: string): Promise<void> => {
+      await history.remove(id);
+      setEntries((prev) => prev.filter((x) => x.id !== id));
+    },
+    [history],
+  );
+
+  return { entries, status, removeEntry };
 }
