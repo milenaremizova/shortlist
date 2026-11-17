@@ -51,7 +51,7 @@
 }
 
 .title {
-  @include display(19px);
+  @include display-text(19px);
 
   overflow-wrap: anywhere;
 }

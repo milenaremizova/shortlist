@@ -33,7 +33,7 @@
 }
 
 .heading {
-  @include display(46px);
+  @include display-text(46px);
 }
 
 .accent {
@@ -72,7 +72,7 @@
 }
 
 .number {
-  @include display(19px);
+  @include display-text(19px);
 
   min-width: 24px;
   text-align: center;
