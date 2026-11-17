@@ -1,0 +1,50 @@
+# Спецификация API Gateway в Yandex Cloud (OpenAPI 3.0 + расширения Яндекса).
+# Шлюз — единая точка входа: /api/* уходит в контейнер с сервером, всё остальное — файлы из бакета.
+
+
+openapi: 3.0.0
+info:
+  title: shortlist
+  version: 1.0.0
+
+paths:
+  # Все запросы к API — в контейнер. Путь передаётся как есть: /api/movies/search?q=...
+  /api/{path+}:
+    x-yc-apigateway-any-method:
+      parameters:
+        - name: path
+          in: path
+          required: true
+          schema:
+            type: string
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: <ID_контейнера>
+        service_account_id: <ID_сервисного_аккаунта>
+
+  # Главная страница
+  /:
+    get:
+      x-yc-apigateway-integration:
+        type: object_storage
+        bucket: <имя_бакета>
+        object: index.html
+        service_account_id: <ID_сервисного_аккаунта>
+
+  # Любой файл сборки (/assets/index-abc123.js и т. п.).
+  # Если файла нет — это адрес страницы приложения (/home, /rating/new):
+  # отдаём index.html, а маршрут разберёт React Router. Так работают все SPA.
+  /{file+}:
+    get:
+      parameters:
+        - name: file
+          in: path
+          required: true
+          schema:
+            type: string
+      x-yc-apigateway-integration:
+        type: object_storage
+        bucket: <имя_бакета>
+        object: '{file}'
+        error_object: index.html
+        service_account_id: <ID_сервисного_аккаунта>

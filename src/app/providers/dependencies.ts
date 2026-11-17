@@ -5,11 +5,6 @@ import type { HistoryRepository } from '@/api/history/HistoryRepository';
 import type { ItemProvider } from '@/api/ItemProvider';
 import type { ItemCategory } from '@/domain/types';
 
-/**
- * Всё, что приходит «снаружи» домена: источники вариантов и хранилища.
- * Компоненты берут зависимости отсюда, а не создают их сами (Dependency Injection),
- * поэтому в тестах и сторибуке их можно подменить фейками.
- */
 export interface Dependencies {
   history: HistoryRepository;
   providers: Partial<Record<ItemCategory, ItemProvider>>;

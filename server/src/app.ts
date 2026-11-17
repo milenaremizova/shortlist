@@ -9,6 +9,7 @@ import { moviesRouter } from './routes/movies.ts';
 
 export function createApp(config: Config, search: MovieSearch) {
   const app = express();
+  app.set('trust proxy', config.trustProxy);
   app.use(helmet());
   app.use(cors({ origin: config.allowedOrigin }));
 
