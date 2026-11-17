@@ -85,7 +85,9 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: npm run build
+       - run: npm run build
+        env:
+          VITE_SITE_URL: ${{ vars.SITE_URL }}
 
       # Файлы с хэшем в имени (assets/index-a1b2c3.js) не меняются никогда — кэшируем на год.
       # index.html — без кэша, иначе браузер не узнает о новой версии сайта.
