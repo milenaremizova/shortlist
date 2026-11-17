@@ -3,13 +3,16 @@
   flex-direction: column;
   gap: var(--space-6);
   min-height: 100dvh;
-  padding: var(--space-14) var(--space-6) 34px;
+  padding: calc(var(--space-4) + env(safe-area-inset-top)) var(--space-6)
+    calc(var(--space-6) + env(safe-area-inset-bottom));
+  overflow-x: clip;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-height: 44px;
 }
 
 .logo {
@@ -24,6 +27,10 @@
   text-transform: uppercase;
 }
 
+.hero {
+  position: relative;
+}
+
 .title {
   @include display-text(58px);
 }
@@ -32,10 +39,84 @@
   color: var(--color-bg-accent);
 }
 
+.starBig {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-2);
+  width: 30px;
+  height: 30px;
+  color: var(--color-bg-warm);
+}
+
+.stage {
+  position: relative;
+  height: 244px;
+}
+
+.circle {
+  position: absolute;
+  top: 20px;
+  right: -45px;
+  width: 260px;
+  height: 280px;
+}
+
 .mascot {
-  align-self: flex-end;
+  position: absolute;
+  top: 68px;
+  right: -25px;
+}
+
+.starSmall {
+  position: absolute;
+  top: 134px;
+  left: 11px;
+  width: 36px;
+  height: 36px;
+  color: var(--color-bg-accent);
+}
+
+.bubble {
+  position: absolute;
+  top: 260px;
+  left: 0;
+  width: 240px;
+  padding: var(--space-3);
+  border: 2px solid var(--color-bg-inverse);
+  background: var(--color-bg-surface);
+  box-shadow: var(--shadow-hard-m);
+  color: var(--color-text-primary);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 .lead {
   margin-top: auto;
+  opacity: 0.65;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    transform: scale(1);
+    transform-origin: center;
+  }
+  50% {
+    transform: scale(0.8);
+    transform-origin: center;
+  }
+}
+
+.starBig,
+.starSmall {
+  animation: twinkle 2.4s ease-in-out infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.starSmall {
+  animation-delay: 1.2s;
 }

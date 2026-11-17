@@ -26,7 +26,6 @@ export function HomePage() {
           <span className={styles.hello}>Привет!</span>
           <span className={styles.question}>Готовы к вечеру?</span>
         </span>
-        {/* уведомления появятся с аккаунтами в v1.1, пока кнопка неактивна */}
         <button type="button" className={styles.bell} aria-label="Уведомления" disabled>
           <svg width="16" height="17" viewBox="0 0 16 17" aria-hidden="true">
             <path
@@ -66,7 +65,7 @@ export function HomePage() {
           to="/rating/new"
           title="Свой рейтинг"
           icon={ratingIcon}
-          text="Расставь любые хотелки по местам"
+          text="Расставь любые фильмы по местам"
         />
       </div>
 

@@ -59,14 +59,75 @@
 }
 
 .entry {
+  border-radius: var(--radius-md);
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+}
+
+// строка, по которой кликают; у <summary> есть свой маркер-треугольник — убираем его
+.summary {
   display: flex;
   align-items: center;
   gap: var(--space-4);
   min-height: 79px;
   padding: var(--space-3) var(--space-5);
-  border-radius: var(--radius-md);
-  background: var(--color-bg-surface);
-  color: var(--color-text-primary);
+  cursor: pointer;
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+}
+
+.chevron {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  margin-left: auto;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+
+  .entry[open] & {
+    transform: rotate(-135deg);
+  }
+}
+
+.places {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0 var(--space-5) var(--space-4) calc(var(--space-5) + 56px + var(--space-4));
+  font-size: 14px;
+}
+
+.place {
+  padding-left: var(--space-1);
+
+  &::marker {
+    color: var(--color-text-secondary);
+    font-weight: 700;
+  }
+
+  &:first-child .placeTitle {
+    display: inline;
+    padding: 0 var(--space-1);
+    border-radius: 4px;
+    background: var(--color-accent-mint);
+  }
+}
+
+.placeTitle {
+  display: block;
+  font-weight: 600;
+}
+
+.placeMeta {
+  display: block;
+  font-size: 12px;
+  color: var(--color-text-secondary);
 }
 
 .date {
@@ -106,4 +167,32 @@
   color: var(--color-text-secondary);
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 var(--space-5) var(--space-4);
+}
+
+.delete {
+  min-height: 45px;
+  padding: 0 var(--space-4);
+  border: 2px solid var(--color-border-error);
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-border-error);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+}
+
+.deleteConfirm {
+  background: var(--color-border-error);
+  color: var(--color-text-on-screen);
 }
