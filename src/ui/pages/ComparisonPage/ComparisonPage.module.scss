@@ -38,7 +38,7 @@
 }
 
 .question {
-  @include display(30px);
+  @include display-text(30px);
 }
 
 .lead {
