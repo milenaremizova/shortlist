@@ -18,7 +18,7 @@ export function DependenciesProvider({ children, value }: Props) {
         history: new LocalStorageHistoryRepository(),
         drafts: new LocalStorageRatingDraftRepository(),
         providers: {
-          film: new MovieProvider(import.meta.env.VITE_API_URL),
+          film: new MovieProvider(import.meta.env.VITE_API_URL || window.location.origin),
         },
       },
   );

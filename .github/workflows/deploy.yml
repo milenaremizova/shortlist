@@ -1,0 +1,97 @@
+# Выкладка в Yandex Cloud после каждого зелёного мерджа в main.
+# Идентификаторы ресурсов — в Variables репозитория, ключи — в Secrets.
+
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch: # кнопка «Run workflow» для ручной выкладки
+
+# две выкладки одновременно не запускаем: вторая дождётся первой
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+# на workflow_run github.sha — последний коммит main, а не тот, что проверил CI;
+# поэтому берём именно проверенный коммит
+env:
+  SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+jobs:
+  server:
+    # выкладываем, только если CI на main прошёл
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    env:
+      IMAGE: cr.yandex/${{ vars.YC_REGISTRY_ID }}/shortlist-server:${{ github.event.workflow_run.head_sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SHA }}
+
+      - name: Установить yc CLI
+        run: |
+          curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i "$HOME/yc" -n
+          echo "$HOME/yc/bin" >> "$GITHUB_PATH"
+
+      - name: Войти в Yandex Cloud
+        env:
+          YC_SA_KEY_JSON: ${{ secrets.YC_SA_KEY_JSON }}
+        run: |
+          echo "$YC_SA_KEY_JSON" > key.json
+          yc config set service-account-key key.json
+          yc config set folder-id ${{ vars.YC_FOLDER_ID }}
+          rm key.json
+
+      - name: Собрать и отправить образ в реестр
+        run: |
+          yc iam create-token | docker login --username iam --password-stdin cr.yandex
+          docker build -t "$IMAGE" server
+          docker push "$IMAGE"
+
+      - name: Выложить новую ревизию контейнера
+        env:
+          POISKKINO_API_KEY: ${{ secrets.POISKKINO_API_KEY }}
+        run: |
+          yc serverless container revision deploy \
+            --container-id ${{ vars.YC_CONTAINER_ID }} \
+            --image "$IMAGE" \
+            --service-account-id ${{ vars.YC_RUNTIME_SA_ID }} \
+            --memory 256MB \
+            --cores 1 \
+            --core-fraction 20 \
+            --concurrency 4 \
+            --execution-timeout 30s \
+            --environment "POISKKINO_API_KEY=$POISKKINO_API_KEY,TRUST_PROXY=1"
+
+  client:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.YC_S3_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.YC_S3_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ru-central1
+      S3: aws s3 --endpoint-url=https://storage.yandexcloud.net
+      BUCKET: s3://${{ vars.YC_BUCKET }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SHA }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+
+      # Файлы с хэшем в имени (assets/index-a1b2c3.js) не меняются никогда — кэшируем на год.
+      # index.html — без кэша, иначе браузер не узнает о новой версии сайта.
+      - name: Загрузить сайт в бакет
+        run: |
+          $S3 sync dist "$BUCKET" --delete --exclude index.html \
+            --cache-control "public, max-age=31536000, immutable"
+          $S3 cp dist/index.html "$BUCKET/index.html" \
+            --cache-control "no-cache" --content-type "text/html; charset=utf-8"
