@@ -93,7 +93,11 @@ jobs:
       # index.html — без кэша, иначе браузер не узнает о новой версии сайта.
       - name: Загрузить сайт в бакет
         run: |
-          $S3 sync dist "$BUCKET" --delete --exclude index.html \
+          $S3 sync dist/assets "$BUCKET/assets" --delete \
             --cache-control "public, max-age=31536000, immutable"
+          $S3 sync dist "$BUCKET" --delete --exclude "assets/*" --exclude index.html \
+            --cache-control "public, max-age=3600"
+          $S3 cp dist/manifest.webmanifest "$BUCKET/manifest.webmanifest" \
+            --cache-control "public, max-age=3600" --content-type "application/manifest+json"
           $S3 cp dist/index.html "$BUCKET/index.html" \
             --cache-control "no-cache" --content-type "text/html; charset=utf-8"
