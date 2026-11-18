@@ -7,7 +7,8 @@ export type CoinFn = () => boolean;
 export const coin: CoinFn = () => Math.random() < 0.5;
 
 /** Чем закончилась дуэль: совпали или варианты кончились. */
-export type DuelResult = { kind: 'match'; item: Item } | { kind: 'noMatch'; lastPick: Item };
+export type DuelResult =
+  { kind: 'match'; item: Item } | { kind: 'noMatch'; favorites: Record<PlayerId, Item> };
 
 /** Чей сейчас ход и какую пару ему показать. */
 export interface DuelTurn {
@@ -18,13 +19,16 @@ export interface DuelTurn {
 /**
  * Дуэль вслепую. Игроки ходят по очереди и не видят выбор друг друга.
  * Каждому показывают пару: то, что выбрал соперник (кандидат), и новый вариант из пула.
- * Выбрал кандидата — совпадение, дуэль окончена. Выбрал новый — кандидат выбывает,
- * новый становится кандидатом, ход переходит. Пул кончился — noMatch с последним выбором.
+ * новый становится кандидатом, ход переходит. Пул кончился - noMatch с фаворитом каждого игрока.
+ * новый становится кандидатом, ход переходит. Пул кончился - noMatch с последним выбором.
  */
 export class DuelSession {
   /** Варианты, которые ещё не показывали. Берём с начала через shift(). */
   private readonly queue: Item[];
   private readonly flip: CoinFn;
+  /** Последний выбор каждого игрока: из них получаются фавориты, если не совпали. */
+  private readonly lastPicks: Partial<Record<PlayerId, Item>> = {};
+
   /** Последний выбор: его увидит следующий игрок. На первом ходе кандидата ещё нет. */
   private candidate: Item | null = null;
   private player: PlayerId;
@@ -33,7 +37,7 @@ export class DuelSession {
   private turns = 0;
 
   constructor(pool: readonly Item[], starter: PlayerId, flip: CoinFn = coin) {
-    if (pool.length < 2) throw new Error('Для дуэли нужно минимум два варианта');
+    if (pool.length < 3) throw new Error('Для дуэли нужно минимум три варианта');
 
     this.queue = [...pool];
     this.flip = flip;
@@ -80,11 +84,15 @@ export class DuelSession {
       return;
     }
     this.candidate = picked;
+    this.lastPicks[this.player] = picked;
     this.player = otherPlayer(this.player);
     this.turn = this.nextTurn();
 
     if (!this.turn) {
-      this.outcome = { kind: 'noMatch', lastPick: picked };
+      this.outcome = {
+        kind: 'noMatch',
+        favorites: { host: this.lastPicks.host!, guest: this.lastPicks.guest! },
+      };
     }
   }
 
