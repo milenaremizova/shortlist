@@ -6,12 +6,12 @@ import { DuelSession, type CoinFn } from './DuelSession';
 const pool = ['a', 'b', 'c', 'd'].map((id) => makeItem(id));
 const [a, b, c, d] = pool;
 
-/** флип всегда кладет прежний выбор (или первый вариант) слева, тк так пары предсказуемы. */
+/** «Монетка» всегда кладёт прежний выбор (или первый вариант) слева, так пары предсказуемы. */
 const keepLeft: CoinFn = () => true;
 
 describe('DuelSession', () => {
-  it('не создаётся, если вариантов меньше двух', () => {
-    expect(() => new DuelSession([a], 'host', keepLeft)).toThrow();
+  it('не создаётся, если вариантов меньше трёх: иначе второй игрок не успеет сходить', () => {
+    expect(() => new DuelSession([a, b], 'host', keepLeft)).toThrow();
   });
 
   it('первый ход: два первых варианта из пула, ходит тот, кто выиграл кубик', () => {
@@ -51,15 +51,15 @@ describe('DuelSession', () => {
     expect(session.currentTurn()).toEqual({ player: 'host', pair: { left: c, right: d } });
   });
 
-  it('если пул закончился без совпадения — noMatch с последним выбором', () => {
+  it('если пул закончился без совпадения — noMatch с фаворитом каждого игрока', () => {
     const session = new DuelSession(pool, 'host', keepLeft);
 
-    session.choose('a'); // (a, b)
-    session.choose('c'); // (a, c)
-    session.choose('d'); // (c, d) - новых вариантов больше нет
+    session.choose('a'); // host: (a, b) -> a
+    session.choose('c'); // guest: (a, c) -> c
+    session.choose('d'); // host: (c, d) -> d, новых вариантов больше нет
 
     expect(session.isComplete()).toBe(true);
-    expect(session.result()).toEqual({ kind: 'noMatch', lastPick: d });
+    expect(session.result()).toEqual({ kind: 'noMatch', favorites: { host: d, guest: c } });
     expect(session.currentTurn()).toBeNull();
     expect(session.turnsTaken()).toBe(3);
   });
