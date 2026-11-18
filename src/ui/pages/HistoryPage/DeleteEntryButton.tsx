@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import styles from './HistoryPage.module.scss';
 
@@ -35,7 +35,7 @@ export function DeleteEntryButton({ onDelete }: Props) {
   useEffect(() => {
     if (status !== 'confirm') return;
     const timer = setTimeout(() => {
-      setStatus('idle')
+      setStatus('idle');
     }, 3000);
 
     return () => clearTimeout(timer);
