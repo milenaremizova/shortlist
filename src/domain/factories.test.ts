@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { createRatingSession, createDuelSession } from './factories';
+import { createDuelSession, createRatingSession } from './factories';
 import { identity } from './shuffle';
 import { makeItem } from './testing';
 
