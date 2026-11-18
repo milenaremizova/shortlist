@@ -65,7 +65,7 @@ jobs:
             --core-fraction 20 \
             --concurrency 4 \
             --execution-timeout 30s \
-            --environment "POISKKINO_API_KEY=$POISKKINO_API_KEY,TRUST_PROXY=1"
+            --environment "POISKKINO_API_KEY=$POISKKINO_API_KEY,TRUST_PROXY=2,ALLOWED_ORIGIN=https://shortlisttap.ru"
 
   client:
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
