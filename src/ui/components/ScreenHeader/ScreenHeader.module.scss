@@ -1,0 +1,35 @@
+.header {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+}
+
+.title {
+  grid-column: 2;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.back,
+.close {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 2px solid var(--color-text-on-screen);
+  border-radius: var(--radius-full);
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.back {
+  grid-column: 1;
+}
+
+.close {
+  grid-column: 3;
+}

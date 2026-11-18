@@ -1,0 +1,103 @@
+.screen {
+  @include screen;
+}
+
+.heading {
+  @include display-text(46px);
+  margin-top: var(--space-4);
+}
+
+.pair {
+  display: inline-flex;
+  gap: 2px;
+  vertical-align: middle;
+}
+
+.accent {
+  color: var(--color-bg-accent);
+}
+
+.lead {
+  font-size: 15px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.caption {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 36px;
+  padding: 0 var(--space-3);
+  border: 2px solid var(--color-text-primary);
+  border-radius: var(--radius-full);
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  font-size: 13px;
+  font-weight: 700;
+
+  &[aria-disabled='true'] {
+    opacity: 0.6;
+  }
+}
+
+.chipActive {
+  background: var(--color-bg-accent);
+  box-shadow: var(--shadow-hard-s);
+}
+
+.soon {
+  color: var(--color-text-secondary);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.code {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-5);
+  border: 2px solid var(--color-text-primary);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-surface);
+  box-shadow: var(--shadow-hard-m);
+  color: var(--color-text-primary);
+}
+
+.codeLabel {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.codeValue {
+  @include display-text(40px);
+
+  letter-spacing: 0.08em;
+}
+
+.codeHint {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: auto;
+}

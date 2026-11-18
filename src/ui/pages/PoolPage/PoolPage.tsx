@@ -10,9 +10,20 @@ import styles from './PoolPage.module.scss';
 
 interface Props {
   onStart: (draft: PoolDraft) => void;
+  /** Тексты экрана: один экран сбора вариантов на все режимы. */
+  heading?: string;
+  titlePlaceholder?: string;
+  defaultTitle?: string;
+  submitLabel?: string;
 }
 
-export function PoolPage({ onStart }: Props) {
+export function PoolPage({
+  onStart,
+  heading = 'Новый рейтинг',
+  titlePlaceholder = 'Что посмотреть на неделе',
+  defaultTitle = 'Мой рейтинг',
+  submitLabel = 'Сравнить',
+}: Props) {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const pool = usePool();
@@ -24,7 +35,7 @@ export function PoolPage({ onStart }: Props) {
   }
 
   function handleStart() {
-    onStart({ items: pool.items, title: title.trim() || 'Мой рейтинг' });
+    onStart({ items: pool.items, title: title.trim() || defaultTitle });
   }
 
   return (
@@ -38,7 +49,7 @@ export function PoolPage({ onStart }: Props) {
         >
           ←
         </button>
-        <h1 className={styles.title}>Новый рейтинг</h1>
+        <h1 className={styles.title}>{heading}</h1>
       </header>
 
       <label className={styles.field}>
@@ -47,7 +58,7 @@ export function PoolPage({ onStart }: Props) {
           className={styles.input}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Что посмотреть на неделе"
+          placeholder={titlePlaceholder}
           maxLength={60}
         />
       </label>
@@ -120,7 +131,7 @@ export function PoolPage({ onStart }: Props) {
       )}
 
       <Button className={styles.submit} disabled={!pool.canStart} onClick={handleStart}>
-        Сравнить
+        {submitLabel}
       </Button>
     </main>
   );

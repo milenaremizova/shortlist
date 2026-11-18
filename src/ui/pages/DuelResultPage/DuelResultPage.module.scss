@@ -1,0 +1,126 @@
+.screen {
+  @include screen;
+}
+
+.heading {
+  @include display-text(46px);
+  margin-top: var(--space-4);
+  text-align: center;
+}
+
+.match {
+  color: var(--color-accent-mint);
+}
+
+.miss {
+  color: var(--color-bg-accent);
+}
+
+.lead {
+  font-size: 14px;
+  text-align: center;
+}
+
+.slippers {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: var(--space-2) 0;
+}
+
+.between {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--color-text-primary);
+  border-radius: var(--radius-full);
+  background: var(--color-accent-mint);
+  color: var(--color-text-primary);
+  font-weight: 700;
+}
+
+.miss ~ .slippers .between {
+  background: var(--color-bg-muted);
+}
+
+.winner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-5);
+  border: 2px solid var(--color-text-primary);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-surface);
+  box-shadow: var(--shadow-hard-m);
+  color: var(--color-text-primary);
+}
+
+.tag {
+  align-self: flex-start;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--color-bg-accent);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.winnerTitle {
+  @include display-text(24px);
+}
+
+.meta {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.favorites {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.favorite {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--color-text-primary);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-surface);
+  box-shadow: var(--shadow-hard-s);
+  color: var(--color-text-primary);
+}
+
+.favoriteText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.favoriteLabel {
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.favoriteTitle {
+  font-weight: 700;
+}
+
+.hint {
+  font-size: 13px;
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: auto;
+}
