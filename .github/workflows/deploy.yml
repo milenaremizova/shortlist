@@ -65,7 +65,7 @@ jobs:
             --core-fraction 20 \
             --concurrency 4 \
             --execution-timeout 30s \
-            --environment "POISKKINO_API_KEY=$POISKKINO_API_KEY,TRUST_PROXY=1"
+            --environment "POISKKINO_API_KEY=$POISKKINO_API_KEY,TRUST_PROXY=2,ALLOWED_ORIGIN=https://shortlisttap.ru"
 
   client:
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
@@ -86,6 +86,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+        env:
+          VITE_SITE_URL: ${{ vars.SITE_URL }}
 
       # Файлы с хэшем в имени (assets/index-a1b2c3.js) не меняются никогда — кэшируем на год.
       # index.html — без кэша, иначе браузер не узнает о новой версии сайта.
