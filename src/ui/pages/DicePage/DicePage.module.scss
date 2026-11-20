@@ -1,0 +1,97 @@
+.screen {
+  @include screen;
+}
+
+.heading {
+  @include display-text(46px);
+  margin-top: var(--space-4);
+  text-align: center;
+}
+
+.accent {
+  color: var(--color-bg-accent);
+}
+
+.lead {
+  font-size: 14px;
+  text-align: center;
+}
+
+.players {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.die {
+  margin-bottom: var(--space-2);
+  animation: roll 0.6s ease-out;
+}
+
+@keyframes roll {
+  0% {
+    transform: rotate(-200deg) scale(0.6);
+  }
+  70% {
+    transform: rotate(12deg) scale(1.05);
+  }
+  100% {
+    transform: rotate(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .die {
+    animation: none;
+  }
+}
+
+.name {
+  font-weight: 700;
+}
+
+.badge,
+.badgeFirst {
+  padding: 2px var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.badge {
+  background: rgb(255 255 255 / 18%);
+}
+
+.badgeFirst {
+  background: var(--color-bg-accent);
+  color: var(--color-text-primary);
+}
+
+.subject {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: rgb(255 255 255 / 18%);
+  font-weight: 700;
+}
+
+.subjectLabel {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.submit {
+  margin-top: auto;
+}

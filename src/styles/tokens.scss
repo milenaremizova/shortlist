@@ -67,3 +67,12 @@
   --shadow-hard-m: 4px 4px 0 var(--ink-900);
   --shadow-hard-s: 3px 3px 0 var(--ink-900);
 }
+
+@mixin screen($gap: var(--space-4)) {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+  min-height: 100dvh;
+  padding: calc(var(--space-4) + env(safe-area-inset-top)) var(--space-6)
+    calc(var(--space-6) + env(safe-area-inset-bottom));
+}
