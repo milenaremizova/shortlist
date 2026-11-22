@@ -41,7 +41,7 @@ describe('summary', () => {
   it('для рейтинга показывает победителя', () => {
     const rating = { ...entry('r', '2026-10-01T18:00:00'), items: [makeItem('Дюна')] };
 
-    expect(summary(rating)).toBe('1 место — Дюна');
+        expect(summary(rating)).toBe('Топ: Дюна');
   });
 });
 
@@ -55,8 +55,8 @@ describe('дуэль в истории', () => {
   it('один вариант — совпали на нём', () => {
     const matched = duel(['Человек-паук']);
 
-    expect(summary(matched)).toBe('Совпали — Человек-паук');
-    expect(itemLabels(matched)).toEqual(['Совпали']);
+    expect(summary(matched)).toBe('Мэтч: Человек-паук');
+    expect(itemLabels(matched)).toEqual(['Выбрали вдвоём']);
   });
 
   it('два варианта — не совпали, у каждого свой фаворит', () => {
