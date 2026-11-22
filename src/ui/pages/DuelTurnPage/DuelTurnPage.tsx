@@ -25,33 +25,31 @@ export function DuelTurnPage({ turn, participants, turnNumber, onChoose, onExit 
   const me = participants[turn.player];
   const partner = participants[otherPlayer(turn.player)];
   const passed = turnNumber - 1;
+  const missedMatch = passed >= 2;
 
   return (
     <main className={styles.screen}>
       <ScreenHeader title={`Пара ${turnNumber}`} onClose={() => setConfirmExit(true)} />
 
-      {passed > 0 && (
+      {missedMatch && (
         <div className={styles.toast}>
-          <Toast icon="↻">Не совпали — вот следующая пара</Toast>
+          <Toast>Мэтч не случился — вот следующая пара</Toast>
         </div>
       )}
 
       <div className={styles.players}>
         <span className={styles.player}>
-          <Avatar initial={me.initial} size="sm" />
+          <Avatar initial={me.initial} size="lg" />
           <span className={styles.playerText}>
             <span className={styles.playerName}>{me.name}</span>
-            выбирает
+            <span className={`${styles.playerHint} ${styles.playerHintAccent}`}>выбирает</span>
           </span>
         </span>
-        <span className={styles.amp} aria-hidden="true">
-          &amp;
-        </span>
         <span className={styles.player}>
-          <Avatar initial={partner.initial} tone="muted" size="sm" />
+          <Avatar initial={partner.initial} tone="muted" size="lg" />
           <span className={styles.playerText}>
             <span className={styles.playerName}>{partner.name}</span>
-            {passed > 0 ? 'уже выбрал' : 'ждёт'}
+            <span className={styles.playerHint}>{passed > 0 ? 'уже выбрал' : 'ждёт'}</span>
           </span>
         </span>
       </div>
@@ -62,7 +60,7 @@ export function DuelTurnPage({ turn, participants, turnNumber, onChoose, onExit 
         <span className={styles.accent}>{me.name}?</span>
       </h2>
       <p className={styles.lead}>
-        {partner.name} не видит твой выбор. Совпадёте — раунд завершится сразу.
+        {partner.name} не видит твой выбор. Совпадёте в выборе — раунд завершится сразу.
       </p>
 
       <div className={styles.pair}>
@@ -72,7 +70,7 @@ export function DuelTurnPage({ turn, participants, turnNumber, onChoose, onExit 
       </div>
 
       <p className={styles.footer}>
-        Совпадений пока нет
+        Мэтча пока нет
         {passed > 0 && ` · позади ${passed} ${plural(passed, ['пара', 'пары', 'пар'])}`}
       </p>
 

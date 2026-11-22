@@ -2,8 +2,15 @@ import { Link } from 'react-router';
 
 import { useHistory } from '@/app/hooks/useHistory';
 import { BottomNav } from '@/ui/components/BottomNav/BottomNav';
+import { Separator } from '@/ui/components/Separator/Separator';
 import { Tapochka } from '@/ui/components/Tapochka/Tapochka';
-import { dayParts, groupByMonth, MODE_LABEL, summary } from '@/ui/history/formatHistory';
+import {
+  dayParts,
+  groupByMonth,
+  itemLabels,
+  MODE_LABEL,
+  summary,
+} from '@/ui/history/formatHistory';
 
 import { DeleteEntryButton } from './DeleteEntryButton';
 import styles from './HistoryPage.module.scss';
@@ -38,6 +45,8 @@ export function HistoryPage() {
             <ul className={styles.list}>
               {group.entries.map((entry) => {
                 const date = dayParts(entry.createdAt);
+                const labels = itemLabels(entry);
+                const List = labels ? 'ul' : 'ol';
                 return (
                   <li key={entry.id}>
                     <details className={styles.entry}>
@@ -49,15 +58,22 @@ export function HistoryPage() {
                         <span className={styles.text}>
                           <span className={styles.entryTitle}>{entry.title}</span>
                           <span className={styles.meta}>
-                            {MODE_LABEL[entry.mode]} · {summary(entry)}
+                            {MODE_LABEL[entry.mode]}
+                            <Separator />
+                            {summary(entry)}
                           </span>
                         </span>
                         <span className={styles.chevron} aria-hidden="true" />
                       </summary>
 
-                      <ol className={styles.places}>
-                        {entry.items.map((item) => (
+                      <List
+                        className={[styles.places, labels && styles.labeled]
+                          .filter(Boolean)
+                          .join(' ')}
+                      >
+                        {entry.items.map((item, index) => (
                           <li key={item.id} className={styles.place}>
+                            {labels && <span className={styles.placeLabel}>{labels[index]}</span>}
                             <span className={styles.placeTitle}>{item.title}</span>
                             {item.meta && <span className={styles.placeMeta}>{item.meta}</span>}
                           </li>
@@ -65,7 +81,7 @@ export function HistoryPage() {
                         <div className={styles.actions}>
                           <DeleteEntryButton onDelete={() => removeEntry(entry.id)} />
                         </div>
-                      </ol>
+                      </List>
                     </details>
                   </li>
                 );

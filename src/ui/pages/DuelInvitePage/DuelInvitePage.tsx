@@ -29,8 +29,8 @@ export function DuelInvitePage({ roomCode, onPlayHere, onInvite, onJoin, onBack 
       <h2 className={styles.heading}>
         Выбор{' '}
         <span className={styles.pair} aria-hidden="true">
-          <Tapochka size={34} />
-          <Tapochka size={34} palette="white" mirrored />
+          <Tapochka size={76} />
+          <Tapochka size={76} palette="white" mirrored />
         </span>
         <br />
         <span className={styles.accent}>на двоих</span>
@@ -41,7 +41,6 @@ export function DuelInvitePage({ roomCode, onPlayHere, onInvite, onJoin, onBack 
       </p>
 
       <section className={styles.section}>
-        <h3 className={styles.caption}>Что выбираем?</h3>
         <div className={styles.chips}>
           {CATEGORIES.map((category) => (
             <span
@@ -51,7 +50,6 @@ export function DuelInvitePage({ roomCode, onPlayHere, onInvite, onJoin, onBack 
                 .join(' ')}
               aria-disabled={!category.available}
             >
-              {category.available && '✓ '}
               {category.label}
               {!category.available && <span className={styles.soon}>скоро</span>}
             </span>
@@ -64,6 +62,17 @@ export function DuelInvitePage({ roomCode, onPlayHere, onInvite, onJoin, onBack 
           <span className={styles.codeLabel}>Код комнаты</span>
           <span className={styles.codeValue}>{roomCode}</span>
           <span className={styles.codeHint}>Напарник вводит код в «Пара тапочек» на главной</span>
+        </section>
+      )}
+      {!online && (
+        <section className={styles.code}>
+          <span className={styles.codeLabel}>Как играть?</span>
+          <ol className={styles.steps}>
+            <li>Соберите варианты — 3 и больше</li>
+            <li>Кубики разыграют первый ход</li>
+            <li>Выбирайте по очереди и передавайте телефон</li>
+            <li>Выбрали одно и то же — мэтч!</li>
+          </ol>
         </section>
       )}
 

@@ -83,7 +83,7 @@ export function DuelFlow() {
           <PoolPage
             onStart={handleStart}
             heading="Пара тапочек"
-            titlePlaceholder="Что смотрим вдвоём"
+            titlePlaceholder="Комедия на вечер пятницы"
             defaultTitle="Наша дуэль"
             submitLabel="Бросить кубик"
           />
@@ -96,7 +96,7 @@ export function DuelFlow() {
             <DicePage
               roll={duel.roll}
               participants={participants}
-              subject="Фильм · на одном телефоне"
+              subject={draft.title}
               onStart={() => navigate('/duel/play')}
               onExit={handleExit}
             />

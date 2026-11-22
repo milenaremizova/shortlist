@@ -7,6 +7,7 @@ import eveningIcon from '@/ui/assets/icons/evening-icon.svg';
 import ratingIcon from '@/ui/assets/icons/rating-icon.svg';
 import starIcon from '@/ui/assets/icons/start-icon.svg';
 import { BottomNav } from '@/ui/components/BottomNav/BottomNav';
+import { Separator } from '@/ui/components/Separator/Separator';
 import { Tapochka } from '@/ui/components/Tapochka/Tapochka';
 import { summary } from '@/ui/history/formatHistory';
 
@@ -56,6 +57,7 @@ export function HomePage() {
       <div className={styles.row}>
         <ModeCard
           className={styles.duel}
+          to="/duel"
           icon={duelIcon}
           title="Пара тапочек"
           text="Выбираете вдвоём вслепую, пока не совпадёте"
@@ -73,7 +75,9 @@ export function HomePage() {
         <Link to="/history" className={styles.last}>
           <span className={styles.lastLabel}>Прошлый выбор</span>
           <span className={styles.lastTitle}>
-            {last.title} · {summary(last)}
+            {last.title}
+            <Separator />
+            {summary(last)}
           </span>
         </Link>
       )}

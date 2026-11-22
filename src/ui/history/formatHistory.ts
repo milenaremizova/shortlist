@@ -46,7 +46,16 @@ export function dayParts(iso: string): { day: string; month: string } {
 export function summary(entry: HistoryEntry): string {
   if (entry.mode === 'rating') {
     const winner = entry.items[0];
-    return winner ? `1 место — ${winner.title}` : 'Пустой рейтинг';
+    return winner ? `Топ: ${winner.title}` : 'Пустой рейтинг';
+  }
+  if (entry.mode === 'duel') {
+    const [match] = entry.items;
+    return entry.items.length === 1 ? `Мэтч: ${match.title}` : 'Не совпали';
   }
   return entry.items.map((item) => item.title).join(' · ');
+}
+
+export function itemLabels(entry: HistoryEntry): string[] | null {
+  if (entry.mode !== 'duel') return null;
+  return entry.items.length === 1 ? ['Выбрали вдвоём'] : ['Фаворит Игрока 1', 'Фаворит Игрока 2'];
 }

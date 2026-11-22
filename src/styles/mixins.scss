@@ -1,14 +1,12 @@
 $bp-tablet: 768px;
 $bp-desktop: 1024px;
 
-// mobile-first: базовые стили — для телефона, шире — через from()
 @mixin from($width) {
   @media (min-width: $width) {
     @content;
   }
 }
 
-// заголовки капсом из кита: Display/XL 58 · L 46 · M 30 · S 19
 @mixin display-text($size) {
   font-family: var(--font-display);
   font-size: $size;
@@ -17,7 +15,6 @@ $bp-desktop: 1024px;
   text-transform: uppercase;
 }
 
-// «вдавливание» карточек и кнопок при нажатии
 @mixin pressable {
   transition:
     transform 0.12s ease,
@@ -27,4 +24,13 @@ $bp-desktop: 1024px;
     transform: translate(2px, 2px);
     box-shadow: none;
   }
+}
+
+@mixin screen($gap: var(--space-4)) {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+  min-height: 100dvh;
+  padding: calc(var(--space-4) + env(safe-area-inset-top)) var(--space-6)
+    calc(var(--space-6) + env(safe-area-inset-bottom));
 }
