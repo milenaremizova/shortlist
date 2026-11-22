@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import type { HistoryEntry } from '@/api/history/HistoryRepository';
 import { makeItem } from '@/domain/testing';
 
-import { groupByMonth, summary } from './formatHistory';
+import { groupByMonth, itemLabels, summary } from './formatHistory';
 
 function entry(id: string, createdAt: string): HistoryEntry {
   return { id, mode: 'rating', createdAt, title: id, items: [] };
@@ -41,6 +41,32 @@ describe('summary', () => {
   it('для рейтинга показывает победителя', () => {
     const rating = { ...entry('r', '2026-10-01T18:00:00'), items: [makeItem('Дюна')] };
 
-    expect(summary(rating)).toBe('1 место — Дюна');
+        expect(summary(rating)).toBe('Топ: Дюна');
+  });
+});
+
+describe('дуэль в истории', () => {
+  const duel = (titles: string[]): HistoryEntry => ({
+    ...entry('d', '2026-11-22T18:00:00'),
+    mode: 'duel',
+    items: titles.map((title) => makeItem(title)),
+  });
+
+  it('один вариант — совпали на нём', () => {
+    const matched = duel(['Человек-паук']);
+
+    expect(summary(matched)).toBe('Мэтч: Человек-паук');
+    expect(itemLabels(matched)).toEqual(['Выбрали вдвоём']);
+  });
+
+  it('два варианта — не совпали, у каждого свой фаворит', () => {
+    const missed = duel(['Дюна', 'Барби']);
+
+    expect(summary(missed)).toBe('Не совпали');
+    expect(itemLabels(missed)).toEqual(['Фаворит Игрока 1', 'Фаворит Игрока 2']);
+  });
+
+  it('у рейтинга подписей нет — там номера мест', () => {
+    expect(itemLabels(entry('r', '2026-10-01T18:00:00'))).toBeNull();
   });
 });

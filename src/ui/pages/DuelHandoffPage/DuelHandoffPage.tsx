@@ -33,7 +33,7 @@ export function DuelHandoffPage({ next, turnNumber, pick, onReady, onExit }: Pro
       <h2 className={styles.heading}>
         Выбор
         <br />
-        <span className={styles.accent}>принят ✓</span>
+        <span className={styles.accent}>принят</span>
       </h2>
 
       {pick ? (
@@ -66,7 +66,7 @@ export function DuelHandoffPage({ next, turnNumber, pick, onReady, onExit }: Pro
 
       {onReady ? (
         <Button className={styles.submit} onClick={onReady}>
-          Я {next.name}, готов
+          Продолжить
         </Button>
       ) : (
         <span className={styles.spinner} role="status" aria-label="Ждём" />

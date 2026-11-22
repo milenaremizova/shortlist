@@ -4,12 +4,14 @@
 
 .toast {
   align-self: center;
+  justify-content: center;
 }
 
 .players {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  justify-content: center;
+  gap: var(--space-14);
   margin-top: var(--space-2);
 }
 
@@ -22,7 +24,7 @@
 .playerText {
   display: flex;
   flex-direction: column;
-  font-size: 12px;
+  font-size: 16px;
   line-height: 1.2;
 }
 
@@ -30,14 +32,18 @@
   font-weight: 700;
 }
 
-.amp {
-  font-family: var(--font-display);
+.playerHint {
+  margin-top: var(--space-1);
+  opacity: 0.8;
+}
+
+.playerHintAccent {
   color: var(--color-bg-accent);
 }
 
 .heading {
   @include display-text(30px);
-  margin-top: var(--space-2);
+  margin-top: var(--space-10);
 }
 
 .accent {

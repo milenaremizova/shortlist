@@ -27,7 +27,7 @@ export function DicePage({ roll, participants, subject, onStart, onExit }: Props
         <br />
         <span className={styles.accent}>первый?</span>
       </h2>
-      <p className={styles.lead}>Бросили кубики за вас обоих — у кого больше, тот и начинает.</p>
+      <p className={styles.lead}>Бросили кубики за вас — у кого больше, тот и начинает.</p>
 
       <div className={styles.players}>
         {ORDER.map((id) => {
@@ -43,7 +43,7 @@ export function DicePage({ roll, participants, subject, onStart, onExit }: Props
               <Avatar initial={participants[id].initial} tone={first ? 'accent' : 'muted'} />
               <span className={styles.name}>{participants[id].name}</span>
               <span className={first ? styles.badgeFirst : styles.badge}>
-                {first ? 'Ходит первым' : 'Второй ход'}
+                {first ? 'Ходит первым' : 'Ходит вторым'}
               </span>
             </div>
           );
@@ -51,12 +51,12 @@ export function DicePage({ roll, participants, subject, onStart, onExit }: Props
       </div>
 
       <p className={styles.subject}>
-        <span className={styles.subjectLabel}>Что выбираем</span>
+        <span className={styles.subjectLabel}>Что выбираем?</span>
         {subject}
       </p>
 
       <Button className={styles.submit} onClick={onStart}>
-        → Начать
+        Продолжить
       </Button>
     </main>
   );

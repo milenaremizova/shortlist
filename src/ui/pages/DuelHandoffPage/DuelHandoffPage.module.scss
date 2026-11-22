@@ -4,7 +4,12 @@
 
 .heading {
   @include display-text(46px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   margin-top: var(--space-4);
+  line-height: 1.2;
 }
 
 .accent {
@@ -34,14 +39,15 @@
 }
 
 .pickMeta {
-  font-size: 13px;
+  font-size: 16px;
 }
 
 .next {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-3);
+  margin-top: var(--space-6);
+  gap: var(--space-5);
   text-align: center;
 }
 
